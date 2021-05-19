@@ -1,5 +1,5 @@
 # Game Title
-## Author: Anna Szymanek
+## Author: Małgorzata Jakubik
 
 ### Short description
 
