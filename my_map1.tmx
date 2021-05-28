@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" name="ground" tilewidth="129" tileheight="129" tilecount="18" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/1.png"/>
+  </tile>
+  <tile id="1">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/2.png"/>
+  </tile>
+  <tile id="2">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/3.png"/>
+  </tile>
+  <tile id="3">
+   <image width="129" height="129" source="../../Downloads/FreeTileset/png/Tiles/4.png"/>
+  </tile>
+  <tile id="4">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/5.png"/>
+  </tile>
+  <tile id="5">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/6.png"/>
+  </tile>
+  <tile id="6">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/7.png"/>
+  </tile>
+  <tile id="7">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/8.png"/>
+  </tile>
+  <tile id="8">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/9.png"/>
+  </tile>
+  <tile id="9">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/10.png"/>
+  </tile>
+  <tile id="10">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/11.png"/>
+  </tile>
+  <tile id="11">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/12.png"/>
+  </tile>
+  <tile id="12">
+   <image width="128" height="93" source="../../Downloads/FreeTileset/png/Tiles/13.png"/>
+  </tile>
+  <tile id="13">
+   <image width="128" height="93" source="../../Downloads/FreeTileset/png/Tiles/14.png"/>
+  </tile>
+  <tile id="14">
+   <image width="128" height="93" source="../../Downloads/FreeTileset/png/Tiles/15.png"/>
+  </tile>
+  <tile id="15">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/16.png"/>
+  </tile>
+  <tile id="16">
+   <image width="128" height="99" source="../../Downloads/FreeTileset/png/Tiles/17.png"/>
+  </tile>
+  <tile id="17">
+   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/18.png"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="19" name="objects" tilewidth="282" tileheight="301" tilecount="13" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="133" height="65" source="../../Downloads/FreeTileset/png/Object/Bush (1).png"/>
+  </tile>
+  <tile id="1">
+   <image width="133" height="65" source="../../Downloads/FreeTileset/png/Object/Bush (2).png"/>
+  </tile>
+  <tile id="2">
+   <image width="73" height="47" source="../../Downloads/FreeTileset/png/Object/Bush (3).png"/>
+  </tile>
+  <tile id="3">
+   <image width="73" height="46" source="../../Downloads/FreeTileset/png/Object/Bush (4).png"/>
+  </tile>
+  <tile id="4">
+   <image width="77" height="77" source="../../Downloads/FreeTileset/png/Object/Crate.png"/>
+  </tile>
+  <tile id="5">
+   <image width="49" height="41" source="../../Downloads/FreeTileset/png/Object/Mushroom_1.png"/>
+  </tile>
+  <tile id="6">
+   <image width="50" height="41" source="../../Downloads/FreeTileset/png/Object/Mushroom_2.png"/>
+  </tile>
+  <tile id="7">
+   <image width="63" height="65" source="../../Downloads/FreeTileset/png/Object/Sign_1.png"/>
+  </tile>
+  <tile id="8">
+   <image width="62" height="64" source="../../Downloads/FreeTileset/png/Object/Sign_2.png"/>
+  </tile>
+  <tile id="9">
+   <image width="90" height="54" source="../../Downloads/FreeTileset/png/Object/Stone.png"/>
+  </tile>
+  <tile id="10">
+   <image width="116" height="44" source="../../Downloads/FreeTileset/png/Object/Tree_1.png"/>
+  </tile>
+  <tile id="11">
+   <image width="282" height="301" source="../../Downloads/FreeTileset/png/Object/Tree_2.png"/>
+  </tile>
+  <tile id="12">
+   <image width="282" height="275" source="../../Downloads/FreeTileset/png/Object/Tree_3.png"/>
+  </tile>
+ </tileset>
+ <layer id="1" name="ground" width="40" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIMALxHxAzD/E7aA1YARiZjL0kaOHVAByGwcQc5FgnyRUHxsOeWEglgJiOSCWRbOLCWqPOJF2gNzGCsXEuhGmD5f7mHBgmF1ceNRgU4+MidFLyB4AdPYB6w==
+  </data>
+ </layer>
+</map>
