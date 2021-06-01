@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="3" nextobjectid="1">
  <tileset firstgid="1" name="ground" tilewidth="129" tileheight="129" tilecount="18" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -99,9 +99,94 @@
    <image width="282" height="275" source="../../Downloads/FreeTileset/png/Object/Tree_3.png"/>
   </tile>
  </tileset>
+ <tileset firstgid="32" name="pandka" tilewidth="32" tileheight="32" tilecount="13" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="32" height="32" source="images/tile000.png"/>
+  </tile>
+  <tile id="1">
+   <image width="32" height="32" source="images/tile001.png"/>
+  </tile>
+  <tile id="2">
+   <image width="32" height="32" source="images/tile005.png"/>
+  </tile>
+  <tile id="3">
+   <image width="32" height="32" source="images/tile006.png"/>
+  </tile>
+  <tile id="4">
+   <image width="32" height="32" source="images/tile007.png"/>
+  </tile>
+  <tile id="5">
+   <image width="32" height="32" source="images/tile010.png"/>
+  </tile>
+  <tile id="6">
+   <image width="32" height="32" source="images/tile011.png"/>
+  </tile>
+  <tile id="7">
+   <image width="32" height="32" source="images/tile012.png"/>
+  </tile>
+  <tile id="8">
+   <image width="32" height="32" source="images/tile015.png"/>
+  </tile>
+  <tile id="9">
+   <image width="32" height="32" source="images/tile016.png"/>
+  </tile>
+  <tile id="10">
+   <image width="32" height="32" source="images/tile017.png"/>
+  </tile>
+  <tile id="11">
+   <image width="32" height="32" source="images/tile020.png"/>
+  </tile>
+  <tile id="12">
+   <image width="32" height="32" source="images/tile021.png"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="45" name="pandke" tilewidth="128" tileheight="128" tilecount="13" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="128" height="128" source="images/regular_panda/tile000.png"/>
+  </tile>
+  <tile id="1">
+   <image width="128" height="128" source="images/regular_panda/tile001.png"/>
+  </tile>
+  <tile id="2">
+   <image width="128" height="128" source="images/regular_panda/tile005.png"/>
+  </tile>
+  <tile id="3">
+   <image width="128" height="128" source="images/regular_panda/tile006.png"/>
+  </tile>
+  <tile id="4">
+   <image width="128" height="128" source="images/regular_panda/tile007.png"/>
+  </tile>
+  <tile id="5">
+   <image width="128" height="128" source="images/regular_panda/tile010.png"/>
+  </tile>
+  <tile id="6">
+   <image width="128" height="128" source="images/regular_panda/tile011.png"/>
+  </tile>
+  <tile id="7">
+   <image width="128" height="128" source="images/regular_panda/tile012.png"/>
+  </tile>
+  <tile id="8">
+   <image width="128" height="128" source="images/regular_panda/tile015.png"/>
+  </tile>
+  <tile id="9">
+   <image width="128" height="128" source="images/regular_panda/tile016.png"/>
+  </tile>
+  <tile id="10">
+   <image width="128" height="128" source="images/regular_panda/tile017.png"/>
+  </tile>
+  <tile id="11">
+   <image width="128" height="128" source="images/regular_panda/tile020.png"/>
+  </tile>
+  <tile id="12">
+   <image width="128" height="128" source="images/regular_panda/tile021.png"/>
+  </tile>
+ </tileset>
  <layer id="1" name="ground" width="40" height="7">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFIMALxHxAzD/E7aA1YARiZjL0kaOHVAByGwcQc5FgnyRUHxsOeWEglgJiOSCWRbOLCWqPOJF2gNzGCsXEuhGmD5f7mHBgmF1ceNRgU4+MidFLyB4AdPYB6w==
+   eJxjYBgFIMALxHxAzD/E7aA1YARiZjL0kaOHVAByGwcQc5FoH0gfGxl2MZFgD8xtrFBMrBth+nC5jwkHhtnFhUcNNvXImBi9hOwBAKEbATo=
   </data>
  </layer>
+ <objectgroup id="2" name="Warstwa Obiektu 1"/>
 </map>
