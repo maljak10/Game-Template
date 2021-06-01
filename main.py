@@ -21,6 +21,12 @@ PLAYER_JUMP_SPEED = 20
 PLAYER_START_X = 256
 PLAYER_START_Y = 192
 
+# Viewpoint margin
+LEFT_VIEWPORT_MARGIN = 50
+RIGHT_VIEWPORT_MARGIN = 300
+TOP_VIEWPORT_MARGIN = 150
+BOTTOM_VIEWPORT_MARGIN = 150
+
 
 class MyGame(arcade.Window):
     """
@@ -36,6 +42,7 @@ class MyGame(arcade.Window):
         self.player_list = None
         self.wall_list = None
         self.coin_list = None
+        self.background = None
 
         # Set up the player
         self.player_sprite = None
@@ -45,6 +52,9 @@ class MyGame(arcade.Window):
 
         self.end_of_map = 0
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
+        self.view_left = 0
+        self.view_bottom = 0
+
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
@@ -59,13 +69,56 @@ class MyGame(arcade.Window):
         # add map to game
         my_map = arcade.tilemap.read_tmx("my_map1.tmx")
         self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground")
+        self.background = arcade.tilemap.process_layer(map_object=my_map, layer_name="back_objects")
         if my_map.background_color:
             arcade.set_background_color(my_map.background_color)
 
-        # cut the right side of map
         self.end_of_map = my_map.map_size.width * GRID_PIXEL_SIZE
+        self.map_width = (
+                                 my_map.map_size.width - 1
+                         ) * my_map.tile_size.width
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
+
+        # Reset the viewport
+        self.view_left = 0
+        self.view_bottom = 0
+
+    def scroll_viewport(self) -> None:
+        """Scrolls the viewport when the player gets close to the edges"""
+        # Scroll left
+        # Find the current left boundary
+        left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
+
+        # Are we to the left of this boundary? Then we should scroll left.
+        if self.player_sprite.left < left_boundary:
+            self.view_left -= left_boundary - self.player_sprite.left
+            # But don't scroll past the left edge of the map
+            if self.view_left < 0:
+                self.view_left = 0
+
+        # Scroll right
+        # Find the current right boundary
+        right_boundary = self.view_left + SCREEN_WIDTH - RIGHT_VIEWPORT_MARGIN
+
+        # Are we to the right of this boundary? Then we should scroll right.
+        if self.player_sprite.right > right_boundary:
+            self.view_left += self.player_sprite.right - right_boundary
+            # Don't scroll past the right edge of the map
+            if self.view_left > self.map_width - SCREEN_WIDTH:
+                self.view_left = self.map_width - SCREEN_WIDTH
+
+        self.view_bottom = int(self.view_bottom)
+        self.view_left = int(self.view_left)
+
+        # Do the scrolling
+        arcade.set_viewport(
+            left=self.view_left,
+            right=SCREEN_WIDTH + self.view_left,
+            bottom=self.view_bottom,
+            top=SCREEN_HEIGHT + self.view_bottom,
+        )
+
 
     def on_draw(self):
         """ Render the screen. """
@@ -73,6 +126,8 @@ class MyGame(arcade.Window):
         arcade.start_render()
         self.player_list.draw()
         self.wall_list.draw()
+        self.background.draw()
+
 
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
@@ -97,6 +152,14 @@ class MyGame(arcade.Window):
         # Move the player with the physics engine
         self.physics_engine.update()
 
+        if self.player_sprite.center_y < -100:
+
+            self.player_sprite.center_x = PLAYER_START_X
+            self.player_sprite.center_y = PLAYER_START_Y
+            self.view_left = 0
+            self.view_bottom = 0
+
+        self.scroll_viewport()
 
 def main():
     """ Main method """
