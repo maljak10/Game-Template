@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="7" nextobjectid="18">
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="8" nextobjectid="28">
  <tileset firstgid="1" name="ground" tilewidth="129" tileheight="129" tilecount="18" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -390,19 +390,35 @@
    <image width="128" height="128" source="images/Items/star.png"/>
   </tile>
  </tileset>
- <layer id="1" name="ground" width="40" height="7">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFIMALxHxAzD/QDoGCgXIPIXuZ6egWECAlHBiBmI0MO0j1EyOZejgYSHcfIT8xYcEge7hwyOHCID2sZOrDpwcAA44BTQ==
-  </data>
- </layer>
  <objectgroup id="5" name="back_objects">
   <object id="10" gid="30" x="68" y="768" width="282" height="301"/>
   <object id="11" gid="26" x="61" y="769" width="63" height="65"/>
   <object id="12" gid="29" x="233" y="769" width="116" height="44"/>
-  <object id="13" gid="24" x="1189" y="547" width="49" height="41"/>
+  <object id="13" gid="24" x="1332.75" y="548" width="49" height="41"/>
   <object id="14" gid="24" x="1717" y="419" width="49" height="41"/>
   <object id="15" gid="25" x="2754" y="768" width="50" height="41"/>
   <object id="16" gid="21" x="3511" y="769" width="73" height="47"/>
+  <object id="18" gid="80" x="4735.26" y="770.333" width="126" height="128"/>
+  <object id="19" gid="114" x="4999.88" y="776.821" width="55.2791" height="69.215" rotation="0.248596"/>
+ </objectgroup>
+ <layer id="1" name="ground" width="40" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIMALxHxAzD/QDoECfO6hpVsJmc1MAzvxAVL8ygjEbGTYQaqfGEnUA1LPBMQcDNjdJ05ALxseNUxYMMgeLhxyuNSzQjEp+oixCwCadgGq
+  </data>
+ </layer>
+ <objectgroup id="7" name="collectable">
+  <object id="20" gid="105" x="778.424" y="648.848" width="128" height="128"/>
+  <object id="21" gid="105" x="1157.21" y="564" width="128" height="128"/>
+  <object id="22" gid="105" x="1984.48" y="303.394" width="128" height="128"/>
+  <object id="23" gid="105" x="2836" y="303.394" width="128" height="128"/>
+  <object id="24" gid="105" x="3329.12" y="174.621" width="128" height="128"/>
+  <object id="25" gid="105" x="3456.33" y="176.621" width="128" height="128"/>
+  <object id="26" gid="105" x="3585.14" y="178.621" width="128" height="128"/>
+  <object id="27" gid="105" x="4479.67" y="767.182" width="128" height="128">
+   <properties>
+    <property name="point_value" type="int" value="10"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="6" name="goal" width="40" height="7">
   <data encoding="base64" compression="zlib">

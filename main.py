@@ -4,16 +4,15 @@
 import arcade
 
 # Constants
-SCREEN_WIDTH = 944
-SCREEN_HEIGHT = 850
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 900
 SCREEN_TITLE = "Platformer"
 SPRITE_PIXEL_SIZE = 128
 TILE_SCALING = 0.5
 GRID_PIXEL_SIZE = (SPRITE_PIXEL_SIZE * TILE_SCALING)
 
 # Movement of player
-CHARACTER_SCALING = 1
-MOVEMENT_SPEED = 3
+MOVEMENT_SPEED = 8
 GRAVITY = 1
 PLAYER_JUMP_SPEED = 20
 
@@ -56,6 +55,9 @@ class MyGame(arcade.Window):
         self.view_left = 0
         self.view_bottom = 0
 
+        self.score = 0
+        self.level = 1
+
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
@@ -67,9 +69,11 @@ class MyGame(arcade.Window):
 
         # add map to game
         my_map = arcade.tilemap.read_tmx("my_map1.tmx")
-        self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground")
         self.background = arcade.tilemap.process_layer(map_object=my_map, layer_name="back_objects")
+        self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground")
         self.goal = arcade.tilemap.process_layer(map_object=my_map, layer_name="goal")
+        self.coin_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="collectable")
+
         if my_map.background_color:
             arcade.set_background_color(my_map.background_color)
 
@@ -167,11 +171,15 @@ class MyGame(arcade.Window):
         """ Render the screen. """
 
         arcade.start_render()
-        self.player_list.draw()
-        self.wall_list.draw()
         self.background.draw()
+        self.wall_list.draw()
         self.goal.draw()
+        self.coin_list.draw()
+        self.player_list.draw()
 
+        score_text = f"Score: {self.score}"
+        arcade.draw_text(score_text, start_x=10 + self.view_left,
+                         start_y=820 + self.view_bottom, color=arcade.csscolor.GOLD, font_size=40)
 
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
@@ -204,8 +212,18 @@ class MyGame(arcade.Window):
             self.view_bottom = 0
 
         self.scroll_viewport()
-        self.player_sprite.update()
+        # self.player_sprite.update()
         self.player_sprite.update_animation(delta_time)
+
+        collected_coins = arcade.check_for_collision_with_list(
+            sprite=self.player_sprite, sprite_list=self.coin_list
+        )
+
+        for coin in collected_coins:
+            # Add the coin score to our score
+            self.score += 1
+            # self.score += int(coin.properties["point_value"])
+            coin.remove_from_sprite_lists()
 
         # goals_hit = arcade.check_for_collision_with_list(
         #     sprite=self.player_sprite, sprite_list=self.goals
