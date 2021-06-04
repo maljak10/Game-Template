@@ -5,7 +5,7 @@ import arcade
 
 # Constants
 SCREEN_WIDTH = 944
-SCREEN_HEIGHT = 640
+SCREEN_HEIGHT = 850
 SCREEN_TITLE = "Platformer"
 SPRITE_PIXEL_SIZE = 128
 TILE_SCALING = 0.5
@@ -43,6 +43,7 @@ class MyGame(arcade.Window):
         self.wall_list = None
         self.coin_list = None
         self.background = None
+        self.goal = None
 
         # Set up the player
         self.player_sprite = None
@@ -58,31 +59,73 @@ class MyGame(arcade.Window):
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
-        self.player_list = arcade.SpriteList()
 
-        image_source = ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
-        self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
-        self.player_sprite.center_x = PLAYER_START_X
-        self.player_sprite.center_y = PLAYER_START_Y
-        self.player_list.append(self.player_sprite)
+        self.player_list = arcade.SpriteList()
+        if not self.player_sprite:
+            self.player_sprite = self.create_player_sprite()
+            self.player_list.append(self.player_sprite)
 
         # add map to game
         my_map = arcade.tilemap.read_tmx("my_map1.tmx")
         self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground")
         self.background = arcade.tilemap.process_layer(map_object=my_map, layer_name="back_objects")
+        self.goal = arcade.tilemap.process_layer(map_object=my_map, layer_name="goal")
         if my_map.background_color:
             arcade.set_background_color(my_map.background_color)
 
         self.end_of_map = my_map.map_size.width * GRID_PIXEL_SIZE
-        self.map_width = (
-                                 my_map.map_size.width - 1
-                         ) * my_map.tile_size.width
+        self.map_width = (my_map.map_size.width - 1) * my_map.tile_size.width
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
         # Reset the viewport
         self.view_left = 0
         self.view_bottom = 0
+
+    def create_player_sprite(self) -> arcade.AnimatedWalkingSprite:
+        """Creates the animated player sprite
+
+        Returns:
+            The properly set up player sprite
+        """
+        # Where are the player images stored?
+        texture_path = ":resources:images/animated_characters/female_adventurer/"
+
+        # Set up the appropriate textures
+        walking_paths = [texture_path + f"femaleAdventurer_walk{x}.png" for x in range(0, 7)]
+        standing_path = texture_path + "femaleAdventurer_idle.png"
+        jumping_path = texture_path + "femaleAdventurer_jump.png"
+
+        # Load them all now
+        walking_right_textures = [arcade.load_texture(texture) for texture in walking_paths]
+        walking_left_textures = [arcade.load_texture(texture, mirrored=True) for texture in walking_paths]
+
+        standing_right_textures = [arcade.load_texture(standing_path)]
+        standing_left_textures = [arcade.load_texture(standing_path, mirrored=True)]
+
+        jumping_right_textures = [arcade.load_texture(jumping_path)]
+        jumping_left_textures = [arcade.load_texture(jumping_path, mirrored=True)]
+
+        # Create the sprite
+        player = arcade.AnimatedWalkingSprite()
+
+        # Add the proper textures
+        player.stand_left_textures = standing_left_textures
+        player.stand_right_textures = standing_right_textures
+        player.walk_left_textures = walking_left_textures
+        player.walk_right_textures = walking_right_textures
+        player.jumping_right_textures = jumping_right_textures
+        player.jumping_left_textures = jumping_left_textures
+
+        # Move the player sprite back to the beginning
+        player.center_x = PLAYER_START_X
+        player.center_y = PLAYER_START_Y
+        player.state = arcade.FACE_RIGHT
+
+        # Set the initial texture
+        player.texture = player.stand_right_textures[0]
+
+        return player
 
     def scroll_viewport(self) -> None:
         """Scrolls the viewport when the player gets close to the edges"""
@@ -127,6 +170,7 @@ class MyGame(arcade.Window):
         self.player_list.draw()
         self.wall_list.draw()
         self.background.draw()
+        self.goal.draw()
 
 
     def on_key_press(self, key, modifiers):
@@ -160,6 +204,12 @@ class MyGame(arcade.Window):
             self.view_bottom = 0
 
         self.scroll_viewport()
+        self.player_sprite.update()
+        self.player_sprite.update_animation(delta_time)
+
+        # goals_hit = arcade.check_for_collision_with_list(
+        #     sprite=self.player_sprite, sprite_list=self.goals
+        # )
 
 def main():
     """ Main method """
