@@ -28,15 +28,16 @@ BOTTOM_VIEWPORT_MARGIN = 150
 
 
 class GameMenu(arcade.View):
-    def on_show(self):
-        """ Called when switching to this view"""
-        arcade.set_background_color(arcade.color.WHITE)
+    # def on_show(self):
+    #     """ Called when switching to this view"""
+    #     arcade.load_texture(f"png_ground/BG/BG.png")
 
     def on_draw(self):
         """ Draw the menu """
         arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, arcade.load_texture(f"png_ground/BG/BG.png"))
         arcade.draw_text("Menu Screen", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                                        arcade.color.BLACK, font_size = 30, anchor_x = "center")
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ Use a mouse press to advance to the 'game' view. """
@@ -50,7 +51,20 @@ class Instructions(arcade.View):
 
 
 class PauseView(arcade.View):
-    pass
+    def __init__(self, game_view):
+        super().__init__()
+        self.game_view = game_view
+
+    def on_draw(self):
+        arcade.start_render()
+        player_sprite = self.game_view.player_sprite
+        player_sprite.draw()
+        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left+100, self.game_view.view_bottom+600,
+                         arcade.color.YELLOW_ROSE, font_size=50, align="center")
+
+    def on_key_press(self, key, _modifiers):
+        if key == arcade.key.P:
+            self.window.show_view(self.game_view)
 
 
 class ScoreTable(arcade.View):
@@ -225,6 +239,9 @@ class MyGame(arcade.View):
             if self.physics_engine.can_jump():
                 self.player_sprite.change_y = PLAYER_JUMP_SPEED
                 # play sound
+        elif key == arcade.key.P:
+            pause = PauseView(self)
+            self.window.show_view(pause)
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
