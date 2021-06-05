@@ -79,10 +79,19 @@ class PauseView(arcade.View):
         super().__init__()
         self.game_view = game_view
 
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=150)
+
     def on_draw(self):
         arcade.start_render()
-        player_sprite = self.game_view.player_sprite
-        player_sprite.draw()
+        arcade.draw_lrtb_rectangle_filled(
+            left=self.game_view.view_left,
+            right=self.game_view.view_left + SCREEN_WIDTH,
+            top=self.game_view.view_bottom + SCREEN_HEIGHT,
+            bottom=self.game_view.view_bottom,
+            color=self.fill_color,
+        )
+        # player_sprite = self.game_view.player_sprite
+        # player_sprite.draw()
         arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left+100, self.game_view.view_bottom+600,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
         arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
@@ -102,6 +111,25 @@ class ScoreTable(arcade.View):
 
 class GameOver(arcade.View):
     pass
+
+
+class Congrats(arcade.View):
+    def __init__(self, game_view):
+        super().__init__()
+        self.game_view = game_view
+
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_text("CONGRATULATION", self.game_view.view_left+100, self.game_view.view_bottom+600,
+                         arcade.color.YELLOW_ROSE, font_size=50, align="center")
+        arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
+                         arcade.color.YELLOW_ROSE, font_size=30, align="right")
+
+    def on_key_press(self, key, _modifiers):
+        if key == arcade.key.ESCAPE:
+            title_view = GameMenu()
+            self.window.show_view(title_view)
+        #elif enter to next level
 
 
 class MyGame(arcade.View):
@@ -305,9 +333,13 @@ class MyGame(arcade.View):
             # self.score += int(coin.properties["point_value"])
             coin.remove_from_sprite_lists()
 
-        # goals_hit = arcade.check_for_collision_with_list(
-        #     sprite=self.player_sprite, sprite_list=self.goals
-        # )
+        goals_hit = arcade.check_for_collision_with_list(
+            sprite=self.player_sprite, sprite_list=self.goal
+        )
+
+        if goals_hit:
+            bravo = Congrats(self)
+            self.window.show_view(bravo)
 
 
 def main():
