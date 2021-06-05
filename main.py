@@ -35,19 +35,43 @@ class GameMenu(arcade.View):
     def on_draw(self):
         """ Draw the menu """
         arcade.start_render()
-        arcade.draw_lrwh_rectangle_textured(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, arcade.load_texture(f"png_ground/BG/BG.png"))
-        arcade.draw_text("Menu Screen", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+        arcade.draw_lrwh_rectangle_textured(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+        arcade.draw_text("Press S to start the game or I for instructions", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        """ Use a mouse press to advance to the 'game' view. """
-        game_view = MyGame()
-        game_view.setup()
-        self.window.show_view(game_view)
+    # def on_mouse_press(self, _x, _y, _button, _modifiers):
+    #     """ Use a mouse press to advance to the 'game' view. """
+    #     game_view = MyGame()
+    #     game_view.setup()
+    #     self.window.show_view(game_view)
+    def on_key_press(self, key, _modifiers):
+        if key == arcade.key.S:
+            game_view = MyGame()
+            game_view.setup()
+            self.window.show_view(game_view)
+        elif key == arcade.key.I:
+            instructions_view = Instructions()
+            self.window.show_view(instructions_view)
 
 
 class Instructions(arcade.View):
-    pass
+    def __init__(self):
+        super().__init__()
+
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+        arcade.draw_text("Collect coins and find the exit! Use arrow keys to run and space bar for jump.",
+                         SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_text("Press escape to return to the menu",
+                         SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, arcade.color.BLACK, font_size=30, align="right")
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.ESCAPE:
+            title_view = GameMenu()
+            self.window.show_view(title_view)
 
 
 class PauseView(arcade.View):
@@ -61,10 +85,15 @@ class PauseView(arcade.View):
         player_sprite.draw()
         arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left+100, self.game_view.view_bottom+600,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
+        arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
+                         arcade.color.YELLOW_ROSE, font_size=50, align="right")
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.P:
             self.window.show_view(self.game_view)
+        elif key == arcade.key.ESCAPE:
+            title_view = GameMenu()
+            self.window.show_view(title_view)
 
 
 class ScoreTable(arcade.View):
