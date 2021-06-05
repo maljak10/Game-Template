@@ -4,8 +4,8 @@
 import arcade
 
 # Constants
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 900
+SCREEN_WIDTH = 1152
+SCREEN_HEIGHT = 896
 SCREEN_TITLE = "Platformer"
 SPRITE_PIXEL_SIZE = 128
 TILE_SCALING = 0.5
@@ -27,40 +27,6 @@ TOP_VIEWPORT_MARGIN = 150
 BOTTOM_VIEWPORT_MARGIN = 150
 
 
-class GameMenu(arcade.View):
-    def on_show(self):
-        """ Called when switching to this view"""
-        arcade.set_background_color(arcade.color.WHITE)
-
-    def on_draw(self):
-        """ Draw the menu """
-        arcade.start_render()
-        arcade.draw_text("Menu Screen", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                                        arcade.color.BLACK, font_size = 30, anchor_x = "center")
-
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        """ Use a mouse press to advance to the 'game' view. """
-        game_view = MyGame()
-        game_view.setup()
-        self.window.show_view(game_view)
-
-
-class Instructions(arcade.View):
-    pass
-
-
-class PauseView(arcade.View):
-    pass
-
-
-class ScoreTable(arcade.View):
-    pass
-
-
-class GameOver(arcade.View):
-    pass
-
-
 class MyGame(arcade.View):
     """
     Main application class.
@@ -69,6 +35,7 @@ class MyGame(arcade.View):
     def __init__(self):
 
         # Call the parent class and set up the window
+        # super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         super().__init__()
 
         # Sprite lists
@@ -84,14 +51,13 @@ class MyGame(arcade.View):
         # Add physics engine
         self.physics_engine = None
 
-        # self.back = None
-        arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
         self.end_of_map = 0
+        arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
         self.view_left = 0
         self.view_bottom = 0
+
         self.score = 0
         self.level = 1
-
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
@@ -108,10 +74,6 @@ class MyGame(arcade.View):
         self.goal = arcade.tilemap.process_layer(map_object=my_map, layer_name="goal")
         self.coin_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="collectable")
 
-        # if my_map.background_color:
-        #     arcade.set_background_color(my_map.backgroundcolor)
-
-        # self.back = arcade.load_texture(f"png_ground/BG/BG.png")
         self.end_of_map = my_map.map_size.width * GRID_PIXEL_SIZE
         self.map_width = (my_map.map_size.width - 1) * my_map.tile_size.width
 
@@ -201,7 +163,6 @@ class MyGame(arcade.View):
             top=SCREEN_HEIGHT + self.view_bottom,
         )
 
-
     def on_draw(self):
         """ Render the screen. """
 
@@ -211,6 +172,7 @@ class MyGame(arcade.View):
         self.goal.draw()
         self.coin_list.draw()
         self.player_list.draw()
+
         score_text = f"Score: {self.score}"
         arcade.draw_text(score_text, start_x=10 + self.view_left,
                          start_y=820 + self.view_bottom, color=arcade.csscolor.GOLD, font_size=40)
@@ -239,19 +201,16 @@ class MyGame(arcade.View):
         self.physics_engine.update()
 
         if self.player_sprite.center_y < -100:
-
             self.player_sprite.center_x = PLAYER_START_X
             self.player_sprite.center_y = PLAYER_START_Y
             self.view_left = 0
             self.view_bottom = 0
 
         self.scroll_viewport()
-        # self.player_sprite.update()
         self.player_sprite.update_animation(delta_time)
 
         collected_coins = arcade.check_for_collision_with_list(
-            sprite=self.player_sprite, sprite_list=self.coin_list
-        )
+            sprite=self.player_sprite, sprite_list=self.coin_list)
 
         for coin in collected_coins:
             # Add the coin score to our score
@@ -266,11 +225,34 @@ class MyGame(arcade.View):
 
 def main():
     """ Main method """
-    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    start_view = GameMenu()
-    window.show_view(start_view)
+    window = MyGame()
+    start_view = StartView()
+    start_view.setup()
+    window.show_view.setup()
     arcade.run()
 
+
+100
+101
+
+
+def main():
+    102
+    """ Main method """
+
+
+103
+104
+window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+105
+start_view = GameView()
+106
+window.show_view(start_view)
+107
+start_view.setup()
+108
+arcade.run()
+109
 
 if __name__ == "__main__":
     main()
