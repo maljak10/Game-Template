@@ -2,6 +2,7 @@
   Platformer Game
 """
 import arcade
+import time
 
 # Constants
 SCREEN_WIDTH = 1200
@@ -28,9 +29,8 @@ BOTTOM_VIEWPORT_MARGIN = 150
 
 
 class GameMenu(arcade.View):
-    # def on_show(self):
-    #     """ Called when switching to this view"""
-    #     arcade.load_texture(f"png_ground/BG/BG.png")
+    def __init__(self):
+        super().__init__()
 
     def on_draw(self):
         """ Draw the menu """
@@ -40,11 +40,6 @@ class GameMenu(arcade.View):
         arcade.draw_text("Press S to start the game or I for instructions", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
-    # def on_mouse_press(self, _x, _y, _button, _modifiers):
-    #     """ Use a mouse press to advance to the 'game' view. """
-    #     game_view = MyGame()
-    #     game_view.setup()
-    #     self.window.show_view(game_view)
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.S:
             game_view = MyGame()
@@ -163,6 +158,33 @@ class MyGame(arcade.View):
         self.score = 0
         self.level = 1
 
+        # sounds
+        self.coin_sound = arcade.load_sound(":resources:sounds/coin5.wav")
+        self.jump_sound = arcade.load_sound(":resources:sounds/jump3.wav")
+        self.lost_life_sound = arcade.load_sound(":resources:sounds/hit4.wav")
+        self.finish_level_sound = arcade.load_sound(":resources:sounds/upgrade1.wav")
+        self.game_over_sound = arcade.load_sound(":resources:sounds/hit4.wav")
+
+        self.music_list = []
+        self.current_song_index = 0
+        self.current_player = None
+        self.music = None
+
+    def advance_song(self):
+        self.current_song_index += 1
+        if self.current_song_index >= len(self.music_list):
+            self.current_song_index = 0
+
+    def play_song(self):
+        # stop currently playing
+        if self.music:
+            self.music.stop()
+
+    # play next song
+        self.music = arcade.Sound(self.music_list[self.current_song_index], streaming=True)
+        self.current_player = self.music.play(volume=0.1, loop=True)
+        time.sleep(0.03)
+
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
@@ -191,6 +213,11 @@ class MyGame(arcade.View):
         # Reset the viewport
         self.view_left = 0
         self.view_bottom = 0
+
+        # Setup music
+        self.music_list = ["sounds/childish_theme.WAV", "sounds/sky_loop.WAV"]
+        self.current_song_index = 0
+        self.play_song()
 
     def create_player_sprite(self) -> arcade.AnimatedWalkingSprite:
         """Creates the animated player sprite
@@ -272,7 +299,6 @@ class MyGame(arcade.View):
             top=SCREEN_HEIGHT + self.view_bottom,
         )
 
-
     def on_draw(self):
         """ Render the screen. """
 
@@ -295,7 +321,7 @@ class MyGame(arcade.View):
         elif key == arcade.key.SPACE:
             if self.physics_engine.can_jump():
                 self.player_sprite.change_y = PLAYER_JUMP_SPEED
-                # play sound
+                arcade.play_sound(self.jump_sound)
         elif key == arcade.key.P:
             pause = PauseView(self)
             self.window.show_view(pause)
@@ -331,6 +357,7 @@ class MyGame(arcade.View):
             # Add the coin score to our score
             self.score += 1
             # self.score += int(coin.properties["point_value"])
+            arcade.play_sound(self.coin_sound)
             coin.remove_from_sprite_lists()
 
         goals_hit = arcade.check_for_collision_with_list(
@@ -340,6 +367,7 @@ class MyGame(arcade.View):
         if goals_hit:
             bravo = Congrats(self)
             self.window.show_view(bravo)
+            arcade.play_sound(self.finish_level_sound)
 
 
 def main():
