@@ -3,6 +3,7 @@
 """
 import arcade
 import time
+import sys
 
 # Constants
 SCREEN_WIDTH = 1200
@@ -85,8 +86,6 @@ class PauseView(arcade.View):
             bottom=self.game_view.view_bottom,
             color=self.fill_color,
         )
-        # player_sprite = self.game_view.player_sprite
-        # player_sprite.draw()
         arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left+100, self.game_view.view_bottom+600,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
         arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
@@ -114,17 +113,28 @@ class Congrats(arcade.View):
         self.game_view = game_view
 
     def on_draw(self):
-        arcade.start_render()
+        self.game_view.on_draw()
         arcade.draw_text("CONGRATULATION", self.game_view.view_left+100, self.game_view.view_bottom+600,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
+        arcade.draw_text("TO NEXT LEVEL PRESS ENTER", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
+                         arcade.color.YELLOW_ROSE, font_size=30, align="right")
         arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
                          arcade.color.YELLOW_ROSE, font_size=30, align="right")
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ESCAPE:
+            self.game_view.view_left = 0
+            self.game_view.view_bottom = 0
             title_view = GameMenu()
             self.window.show_view(title_view)
-        #elif enter to next level
+
+        elif key == arcade.key.ENTER:
+            self.game_view.level += 1
+            self.game_view.setup()
+            self.window.show_view(self.game_view)
+
+            self.game_view.view_left = 0
+            self.game_view.view_bottom = 0
 
 
 class MyGame(arcade.View):
@@ -185,7 +195,6 @@ class MyGame(arcade.View):
         self.current_player = self.music.play(volume=0.1, loop=True)
         time.sleep(0.03)
 
-
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
 
@@ -195,7 +204,7 @@ class MyGame(arcade.View):
             self.player_list.append(self.player_sprite)
 
         # add map to game
-        my_map = arcade.tilemap.read_tmx("my_map1.tmx")
+        my_map = arcade.tilemap.read_tmx(f"my_map{self.level}.tmx")
         self.background = arcade.tilemap.process_layer(map_object=my_map, layer_name="back_objects")
         self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground")
         self.goal = arcade.tilemap.process_layer(map_object=my_map, layer_name="goal")
@@ -204,20 +213,23 @@ class MyGame(arcade.View):
         # if my_map.background_color:
         #     arcade.set_background_color(my_map.backgroundcolor)
 
-        # self.back = arcade.load_texture(f"png_ground/BG/BG.png")
         self.end_of_map = my_map.map_size.width * GRID_PIXEL_SIZE
         self.map_width = (my_map.map_size.width - 1) * my_map.tile_size.width
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
-        # Reset the viewport
-        self.view_left = 0
-        self.view_bottom = 0
-
         # Setup music
         self.music_list = ["sounds/childish_theme.WAV", "sounds/sky_loop.WAV"]
         self.current_song_index = 0
         self.play_song()
+
+        # Move the player sprite back to the beginning
+        self.player_sprite.center_x = PLAYER_START_X
+        self.player_sprite.center_y = PLAYER_START_Y
+
+        # Reset the viewport
+        self.view_left = 0
+        self.view_bottom = 0
 
     def create_player_sprite(self) -> arcade.AnimatedWalkingSprite:
         """Creates the animated player sprite
@@ -266,6 +278,7 @@ class MyGame(arcade.View):
 
     def scroll_viewport(self) -> None:
         """Scrolls the viewport when the player gets close to the edges"""
+        change_viewport = False
         # Scroll left
         # Find the current left boundary
         left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
@@ -273,6 +286,7 @@ class MyGame(arcade.View):
         # Are we to the left of this boundary? Then we should scroll left.
         if self.player_sprite.left < left_boundary:
             self.view_left -= left_boundary - self.player_sprite.left
+            change_viewport = True
             # But don't scroll past the left edge of the map
             if self.view_left < 0:
                 self.view_left = 0
@@ -284,6 +298,7 @@ class MyGame(arcade.View):
         # Are we to the right of this boundary? Then we should scroll right.
         if self.player_sprite.right > right_boundary:
             self.view_left += self.player_sprite.right - right_boundary
+            change_viewport = True
             # Don't scroll past the right edge of the map
             if self.view_left > self.map_width - SCREEN_WIDTH:
                 self.view_left = self.map_width - SCREEN_WIDTH
@@ -292,17 +307,20 @@ class MyGame(arcade.View):
         self.view_left = int(self.view_left)
 
         # Do the scrolling
-        arcade.set_viewport(
-            left=self.view_left,
-            right=SCREEN_WIDTH + self.view_left,
-            bottom=self.view_bottom,
-            top=SCREEN_HEIGHT + self.view_bottom,
-        )
+        if change_viewport:
+            arcade.set_viewport(
+                left=self.view_left,
+                right=SCREEN_WIDTH + self.view_left,
+                bottom=self.view_bottom,
+                top=SCREEN_HEIGHT + self.view_bottom,
+            )
 
     def on_draw(self):
         """ Render the screen. """
 
         arcade.start_render()
+        # self.back = arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+        #                                                 arcade.load_texture(f"png_ground/BG/BG.png"))
         self.background.draw()
         self.wall_list.draw()
         self.goal.draw()
@@ -325,6 +343,8 @@ class MyGame(arcade.View):
         elif key == arcade.key.P:
             pause = PauseView(self)
             self.window.show_view(pause)
+        elif key == arcade.key.Q:
+            sys.quit()
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
