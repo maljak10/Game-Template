@@ -1,105 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="8" nextobjectid="28">
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="8" nextobjectid="28">
  <tileset firstgid="1" name="ground" tilewidth="129" tileheight="129" tilecount="18" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/1.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/1.png"/>
   </tile>
   <tile id="1">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/2.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/2.png"/>
   </tile>
   <tile id="2">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/3.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/3.png"/>
   </tile>
   <tile id="3">
-   <image width="129" height="129" source="../../Downloads/FreeTileset/png/Tiles/4.png"/>
+   <image width="129" height="129" source="png_ground/Tiles/4.png"/>
   </tile>
   <tile id="4">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/5.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/5.png"/>
   </tile>
   <tile id="5">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/6.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/6.png"/>
   </tile>
   <tile id="6">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/7.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/7.png"/>
   </tile>
   <tile id="7">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/8.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/8.png"/>
   </tile>
   <tile id="8">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/9.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/9.png"/>
   </tile>
   <tile id="9">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/10.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/10.png"/>
   </tile>
   <tile id="10">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/11.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/11.png"/>
   </tile>
   <tile id="11">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/12.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/12.png"/>
   </tile>
   <tile id="12">
-   <image width="128" height="93" source="../../Downloads/FreeTileset/png/Tiles/13.png"/>
+   <image width="128" height="93" source="png_ground/Tiles/13.png"/>
   </tile>
   <tile id="13">
-   <image width="128" height="93" source="../../Downloads/FreeTileset/png/Tiles/14.png"/>
+   <image width="128" height="93" source="png_ground/Tiles/14.png"/>
   </tile>
   <tile id="14">
-   <image width="128" height="93" source="../../Downloads/FreeTileset/png/Tiles/15.png"/>
+   <image width="128" height="93" source="png_ground/Tiles/15.png"/>
   </tile>
   <tile id="15">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/16.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/16.png"/>
   </tile>
   <tile id="16">
-   <image width="128" height="99" source="../../Downloads/FreeTileset/png/Tiles/17.png"/>
+   <image width="128" height="99" source="png_ground/Tiles/17.png"/>
   </tile>
   <tile id="17">
-   <image width="128" height="128" source="../../Downloads/FreeTileset/png/Tiles/18.png"/>
+   <image width="128" height="128" source="png_ground/Tiles/18.png"/>
   </tile>
  </tileset>
- <tileset firstgid="19" name="objects" tilewidth="282" tileheight="301" tilecount="13" columns="0">
+ <tileset firstgid="37" name="objects" tilewidth="282" tileheight="301" tilecount="13" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
-   <image width="133" height="65" source="../../Downloads/FreeTileset/png/Object/Bush (1).png"/>
+   <image width="133" height="65" source="png_ground/Object/Bush (1).png"/>
   </tile>
   <tile id="1">
-   <image width="133" height="65" source="../../Downloads/FreeTileset/png/Object/Bush (2).png"/>
+   <image width="133" height="65" source="png_ground/Object/Bush (2).png"/>
   </tile>
   <tile id="2">
-   <image width="73" height="47" source="../../Downloads/FreeTileset/png/Object/Bush (3).png"/>
+   <image width="73" height="47" source="png_ground/Object/Bush (3).png"/>
   </tile>
   <tile id="3">
-   <image width="73" height="46" source="../../Downloads/FreeTileset/png/Object/Bush (4).png"/>
+   <image width="73" height="46" source="png_ground/Object/Bush (4).png"/>
   </tile>
   <tile id="4">
-   <image width="77" height="77" source="../../Downloads/FreeTileset/png/Object/Crate.png"/>
+   <image width="77" height="77" source="png_ground/Object/Crate.png"/>
   </tile>
   <tile id="5">
-   <image width="49" height="41" source="../../Downloads/FreeTileset/png/Object/Mushroom_1.png"/>
+   <image width="49" height="41" source="png_ground/Object/Mushroom_1.png"/>
   </tile>
   <tile id="6">
-   <image width="50" height="41" source="../../Downloads/FreeTileset/png/Object/Mushroom_2.png"/>
+   <image width="50" height="41" source="png_ground/Object/Mushroom_2.png"/>
   </tile>
   <tile id="7">
-   <image width="63" height="65" source="../../Downloads/FreeTileset/png/Object/Sign_1.png"/>
+   <image width="63" height="65" source="png_ground/Object/Sign_1.png"/>
   </tile>
   <tile id="8">
-   <image width="62" height="64" source="../../Downloads/FreeTileset/png/Object/Sign_2.png"/>
+   <image width="62" height="64" source="png_ground/Object/Sign_2.png"/>
   </tile>
   <tile id="9">
-   <image width="90" height="54" source="../../Downloads/FreeTileset/png/Object/Stone.png"/>
+   <image width="90" height="54" source="png_ground/Object/Stone.png"/>
   </tile>
   <tile id="10">
-   <image width="116" height="44" source="../../Downloads/FreeTileset/png/Object/Tree_1.png"/>
+   <image width="116" height="44" source="png_ground/Object/Tree_1.png"/>
   </tile>
   <tile id="11">
-   <image width="282" height="301" source="../../Downloads/FreeTileset/png/Object/Tree_2.png"/>
+   <image width="282" height="301" source="png_ground/Object/Tree_2.png"/>
   </tile>
   <tile id="12">
-   <image width="282" height="275" source="../../Downloads/FreeTileset/png/Object/Tree_3.png"/>
+   <image width="282" height="275" source="png_ground/Object/Tree_3.png"/>
   </tile>
  </tileset>
- <tileset firstgid="32" name="items" tilewidth="128" tileheight="128" tilecount="96" columns="0">
+ <tileset firstgid="50" name="items" tilewidth="128" tileheight="128" tilecount="96" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
    <image width="128" height="128" source="images/Tiles/bomb.png"/>
@@ -391,30 +391,30 @@
   </tile>
  </tileset>
  <objectgroup id="5" name="back_objects">
-  <object id="10" gid="30" x="68" y="768" width="282" height="301"/>
-  <object id="11" gid="26" x="61" y="769" width="63" height="65"/>
-  <object id="12" gid="29" x="233" y="769" width="116" height="44"/>
-  <object id="13" gid="24" x="1332.75" y="548" width="49" height="41"/>
-  <object id="14" gid="24" x="1717" y="419" width="49" height="41"/>
-  <object id="15" gid="25" x="2754" y="768" width="50" height="41"/>
-  <object id="16" gid="21" x="3511" y="769" width="73" height="47"/>
-  <object id="18" gid="80" x="4735.26" y="770.333" width="126" height="128"/>
-  <object id="19" gid="114" x="4999.88" y="776.821" width="55.2791" height="69.215" rotation="0.248596"/>
+  <object id="10" gid="48" x="68" y="768" width="282" height="301"/>
+  <object id="11" gid="44" x="61" y="769" width="63" height="65"/>
+  <object id="12" gid="47" x="233" y="769" width="116" height="44"/>
+  <object id="13" gid="42" x="1332.75" y="548" width="49" height="41"/>
+  <object id="14" gid="42" x="1717" y="419" width="49" height="41"/>
+  <object id="15" gid="43" x="2754" y="768" width="50" height="41"/>
+  <object id="16" gid="39" x="3511" y="769" width="73" height="47"/>
+  <object id="18" gid="98" x="4735.26" y="770.333" width="126" height="128"/>
+  <object id="19" gid="132" x="4999.88" y="776.821" width="55.2791" height="69.215" rotation="0.248596"/>
  </objectgroup>
  <layer id="1" name="ground" width="40" height="7">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFIMALxHxAzD/QDoECfO6hpVsJmc1MAzvxAVL8ygjEbGTYQaqfGEnUA1LPBMQcDNjdJ05ALxseNUxYMMgeLhxyuNSzQjEp+oixCwCadgGq
+   eJxjYBgFIMALxHxAzD/QDoECfO6hpVsJmc1MAzvxAVL8ygjEbGTYQaqfGEnUA1LPBMQcDNjdp0lALxseNUxYMMgeLhxyuNSzQjEp+oixCwC23gHO
   </data>
  </layer>
  <objectgroup id="7" name="collectable">
-  <object id="20" gid="105" x="778.424" y="648.848" width="128" height="128"/>
-  <object id="21" gid="105" x="1157.21" y="564" width="128" height="128"/>
-  <object id="22" gid="105" x="1984.48" y="303.394" width="128" height="128"/>
-  <object id="23" gid="105" x="2836" y="303.394" width="128" height="128"/>
-  <object id="24" gid="105" x="3329.12" y="174.621" width="128" height="128"/>
-  <object id="25" gid="105" x="3456.33" y="176.621" width="128" height="128"/>
-  <object id="26" gid="105" x="3585.14" y="178.621" width="128" height="128"/>
-  <object id="27" gid="105" x="4479.67" y="767.182" width="128" height="128">
+  <object id="20" gid="123" x="778.424" y="648.848" width="128" height="128"/>
+  <object id="21" gid="123" x="1157.21" y="564" width="128" height="128"/>
+  <object id="22" gid="123" x="1984.48" y="303.394" width="128" height="128"/>
+  <object id="23" gid="123" x="2836" y="303.394" width="128" height="128"/>
+  <object id="24" gid="123" x="3329.12" y="174.621" width="128" height="128"/>
+  <object id="25" gid="123" x="3456.33" y="176.621" width="128" height="128"/>
+  <object id="26" gid="123" x="3585.14" y="178.621" width="128" height="128"/>
+  <object id="27" gid="123" x="4479.67" y="767.182" width="128" height="128">
    <properties>
     <property name="point_value" type="int" value="10"/>
    </properties>
@@ -422,7 +422,7 @@
  </objectgroup>
  <layer id="6" name="goal" width="40" height="7">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUoAPrgXYAAWA10A4gEgAAdggAdg==
+   eJxjYBgFo2AUoAPfgXYAAeAz0A4gEgAAmOgAmg==
   </data>
  </layer>
 </map>
