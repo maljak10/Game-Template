@@ -6,17 +6,15 @@ import time
 import sys
 
 # Constants
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 900
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Platformer"
 SPRITE_PIXEL_SIZE = 128
-TILE_SCALING = 0.5
-GRID_PIXEL_SIZE = (SPRITE_PIXEL_SIZE * TILE_SCALING)
 
 # Movement of player
-MOVEMENT_SPEED = 8
+MOVEMENT_SPEED = 5
 GRAVITY = 1
-PLAYER_JUMP_SPEED = 20
+PLAYER_JUMP_SPEED = 15
 
 # Position of player
 PLAYER_START_X = 256
@@ -38,11 +36,11 @@ class GameMenu(arcade.View):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
-        arcade.draw_text("Press S to start the game or I for instructions", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+        arcade.draw_text("Press ENTER to start the game or I for instructions", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_key_press(self, key, _modifiers):
-        if key == arcade.key.S:
+        if key == arcade.key.ENTER:
             game_view = MyGame()
             game_view.setup()
             self.window.show_view(game_view)
@@ -97,6 +95,7 @@ class PauseView(arcade.View):
         elif key == arcade.key.ESCAPE:
             title_view = GameMenu()
             self.window.show_view(title_view)
+            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
 
 
 class ScoreTable(arcade.View):
@@ -123,18 +122,15 @@ class Congrats(arcade.View):
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ESCAPE:
-            self.game_view.view_left = 0
-            self.game_view.view_bottom = 0
             title_view = GameMenu()
             self.window.show_view(title_view)
+            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
 
         elif key == arcade.key.ENTER:
+            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
             self.game_view.level += 1
             self.game_view.setup()
             self.window.show_view(self.game_view)
-
-            self.game_view.view_left = 0
-            self.game_view.view_bottom = 0
 
 
 class MyGame(arcade.View):
@@ -188,7 +184,7 @@ class MyGame(arcade.View):
     def play_song(self):
         # stop currently playing
         if self.music:
-            self.music.stop()
+            self.music.stop(self.current_player)
 
     # play next song
         self.music = arcade.Sound(self.music_list[self.current_song_index], streaming=True)
@@ -197,23 +193,25 @@ class MyGame(arcade.View):
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
+        # Reset the viewport
+        self.view_left = 0
+        self.view_bottom = 0
 
         self.player_list = arcade.SpriteList()
-        if not self.player_sprite:
-            self.player_sprite = self.create_player_sprite()
-            self.player_list.append(self.player_sprite)
+        # if not self.player_sprite:
+        self.player_sprite = self.create_player_sprite()
+        self.player_list.append(self.player_sprite)
 
         # add map to game
         my_map = arcade.tilemap.read_tmx(f"my_map{self.level}.tmx")
-        self.background = arcade.tilemap.process_layer(map_object=my_map, layer_name="back_objects")
-        self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground")
-        self.goal = arcade.tilemap.process_layer(map_object=my_map, layer_name="goal")
-        self.coin_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="collectable")
+        self.background = arcade.tilemap.process_layer(map_object=my_map, layer_name="background", scaling=0.7)
+        self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground", scaling=0.7)
+        self.goal = arcade.tilemap.process_layer(map_object=my_map, layer_name="goal", scaling=0.7)
+        self.foreground = arcade.tilemap.process_layer(map_object=my_map, layer_name="foreground", scaling=0.7)
+        # add water in another layers for level 2
+        self.coin_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="collectable", scaling=0.7)
 
-        # if my_map.background_color:
-        #     arcade.set_background_color(my_map.backgroundcolor)
-
-        self.end_of_map = my_map.map_size.width * GRID_PIXEL_SIZE
+        self.end_of_map = my_map.map_size.width
         self.map_width = (my_map.map_size.width - 1) * my_map.tile_size.width
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
@@ -226,10 +224,6 @@ class MyGame(arcade.View):
         # Move the player sprite back to the beginning
         self.player_sprite.center_x = PLAYER_START_X
         self.player_sprite.center_y = PLAYER_START_Y
-
-        # Reset the viewport
-        self.view_left = 0
-        self.view_bottom = 0
 
     def create_player_sprite(self) -> arcade.AnimatedWalkingSprite:
         """Creates the animated player sprite
@@ -324,11 +318,12 @@ class MyGame(arcade.View):
         self.background.draw()
         self.wall_list.draw()
         self.goal.draw()
+        self.foreground.draw()
         self.coin_list.draw()
         self.player_list.draw()
         score_text = f"Score: {self.score}"
         arcade.draw_text(score_text, start_x=10 + self.view_left,
-                         start_y=820 + self.view_bottom, color=arcade.csscolor.GOLD, font_size=40)
+                         start_y=550 + self.view_bottom, color=arcade.csscolor.GOLD, font_size=40)
 
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
@@ -366,7 +361,6 @@ class MyGame(arcade.View):
             self.view_bottom = 0
 
         self.scroll_viewport()
-        # self.player_sprite.update()
         self.player_sprite.update_animation(delta_time)
 
         collected_coins = arcade.check_for_collision_with_list(
