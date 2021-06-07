@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="12" nextobjectid="29">
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="12" nextobjectid="40">
  <tileset firstgid="1" name="ground" tilewidth="129" tileheight="129" tilecount="18" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -435,7 +435,19 @@
    eJxjYBgFo2AU0BO400nPYAAAeNwAjw==
   </data>
  </layer>
- <objectgroup id="4" name="collectable"/>
+ <objectgroup id="4" name="collectable">
+  <object id="29" gid="92" x="640" y="384" width="128" height="128"/>
+  <object id="30" gid="92" x="1160" y="508" width="128" height="128"/>
+  <object id="31" gid="92" x="1548" y="288" width="128" height="128"/>
+  <object id="32" gid="92" x="1662.67" y="160" width="128" height="128"/>
+  <object id="33" gid="92" x="1790.67" y="289.333" width="128" height="128"/>
+  <object id="34" gid="92" x="2306" y="287.333" width="128" height="128"/>
+  <object id="35" gid="92" x="3729" y="287" width="128" height="128"/>
+  <object id="36" gid="92" x="3846" y="287" width="128" height="128"/>
+  <object id="37" gid="92" x="3968" y="288" width="128" height="128"/>
+  <object id="38" gid="92" x="4093.58" y="754.909" width="128" height="128"/>
+  <object id="39" gid="92" x="4732.97" y="288.242" width="128" height="128"/>
+ </objectgroup>
  <layer id="5" name="foreground" width="40" height="7">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2DwAUEkPAoGDiDHAS42Nj0wAABzJACr

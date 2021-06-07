@@ -55,7 +55,7 @@ class LevelSelect(arcade.View):
     def on_draw(self):
         """ Draw the menu """
         arcade.start_render()
-        arcade.draw_lrwh_rectangle_textured(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT,
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
         arcade.draw_text("SELECT THE LEVEL. PRESS KEY ON YOUR KEYBOARD", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
@@ -86,7 +86,7 @@ class Instructions(arcade.View):
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
         arcade.draw_text("Collect coins and find the exit! Use arrow keys to run and space bar for jump.",
-                         SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.BLACK, font_size=30, anchor_x="center")
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, arcade.color.BLACK, font_size=30, anchor_x="center")
         arcade.draw_text("Press escape to return to the menu",
                          SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, arcade.color.BLACK, font_size=30, align="right")
 
@@ -112,7 +112,7 @@ class PauseView(arcade.View):
             bottom=self.game_view.view_bottom,
             color=self.fill_color,
         )
-        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left+100, self.game_view.view_bottom+600,
+        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 600,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
         arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
                          arcade.color.YELLOW_ROSE, font_size=50, align="right")
@@ -153,8 +153,9 @@ class GameOver(arcade.View):
         if key == arcade.key.ENTER:
             self.game_view.player_sprite.change_x = 0
             self.game_view.player_sprite.change_y = 0
-            self.game_view.player_sprite.center_x = PLAYER_START_X
-            self.game_view.player_sprite.center_x = PLAYER_START_X
+            self.game_view.return_to_start()
+            self.game_view.life = 3
+            self.game_view.score = 0
             self.window.show_view(self.game_view)
             arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
         elif key == arcade.key.ESCAPE:
@@ -170,7 +171,7 @@ class Congrats(arcade.View):
 
     def on_draw(self):
         self.game_view.on_draw()
-        arcade.draw_text("CONGRATULATION", self.game_view.view_left+100, self.game_view.view_bottom+600,
+        arcade.draw_text("CONGRATULATION", self.game_view.view_left + 100, self.game_view.view_bottom + 600,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
         arcade.draw_text("TO NEXT LEVEL PRESS ENTER", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
                          arcade.color.YELLOW_ROSE, font_size=30, align="right")
@@ -186,6 +187,8 @@ class Congrats(arcade.View):
         elif key == arcade.key.ENTER:
             arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
             self.game_view.level += 1
+            self.game_view.score = 0
+            self.game_view.life = 3
             self.game_view.setup()
             self.window.show_view(self.game_view)
 
@@ -223,6 +226,7 @@ class MyGame(arcade.View):
         self.view_bottom = 0
         self.score = 0
         self.level = 1
+        self.life = 3
 
         # sounds
         self.coin_sound = arcade.load_sound(":resources:sounds/coin5.wav")
@@ -373,6 +377,31 @@ class MyGame(arcade.View):
                 top=SCREEN_HEIGHT + self.view_bottom,
             )
 
+    def draw_life_counter(self):
+        life = self.life
+        life_table = [150, 200, 250]
+        if life == 3:
+            for l in life_table:
+                arcade.draw_texture_rectangle(l + self.view_left, 570 + self.view_bottom,
+                                              SCREEN_WIDTH / 20, SCREEN_HEIGHT / 15,
+                                              arcade.load_texture("images/HUD/hudHeart_full.png"))
+        elif life == 2:
+            for l in life_table[:-1]:
+                arcade.draw_texture_rectangle(l + self.view_left, 570 + self.view_bottom,
+                                              SCREEN_WIDTH / 20, SCREEN_HEIGHT / 15,
+                                              arcade.load_texture("images/HUD/hudHeart_full.png"))
+            arcade.draw_texture_rectangle(life_table[2] + self.view_left, 570 + self.view_bottom,
+                                          SCREEN_WIDTH / 20, SCREEN_HEIGHT / 15,
+                                          arcade.load_texture("images/HUD/hudHeart_empty.png"))
+        elif life == 1:
+            arcade.draw_texture_rectangle(life_table[0] + self.view_left, 570 + self.view_bottom,
+                                          SCREEN_WIDTH / 20, SCREEN_HEIGHT / 15,
+                                          arcade.load_texture("images/HUD/hudHeart_full.png"))
+            for l in life_table[1:]:
+                arcade.draw_texture_rectangle(l + self.view_left, 570 + self.view_bottom,
+                                              SCREEN_WIDTH / 20, SCREEN_HEIGHT / 15,
+                                              arcade.load_texture("images/HUD/hudHeart_empty.png"))
+
     def on_draw(self):
         """ Render the screen. """
 
@@ -387,8 +416,12 @@ class MyGame(arcade.View):
         self.player_list.draw()
         self.foreground.draw()
         score_text = f"Score: {self.score}"
+        level_text = f"Level: {self.level}"
+        arcade.draw_text(level_text, start_x=10 + self.view_left, start_y=570 + self.view_bottom,
+                         color=arcade.csscolor.DARK_ORANGE, font_size=20)
         arcade.draw_text(score_text, start_x=10 + self.view_left,
-                         start_y=550 + self.view_bottom, color=arcade.csscolor.GOLD, font_size=40)
+                         start_y=540 + self.view_bottom, color=arcade.csscolor.GOLD, font_size=20)
+        self.draw_life_counter()
 
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
@@ -420,11 +453,7 @@ class MyGame(arcade.View):
         self.physics_engine.update()
 
         if self.player_sprite.center_y < -100:
-            self.window.show_view((GameOver(self)))
-            self.player_sprite.center_x = PLAYER_START_X
-            self.player_sprite.center_y = PLAYER_START_Y
-            self.view_left = 0
-            self.view_bottom = 0
+            self.life_check()
 
         self.scroll_viewport()
         self.player_sprite.update_animation(delta_time)
@@ -447,7 +476,6 @@ class MyGame(arcade.View):
         for coin in collected_coins:
             # Add the coin score to our score
             self.score += 1
-            # self.score += int(coin.properties["point_value"])
             arcade.play_sound(self.coin_sound)
             coin.remove_from_sprite_lists()
 
@@ -461,6 +489,21 @@ class MyGame(arcade.View):
             arcade.play_sound(self.finish_level_sound)
 
         if arcade.check_for_collision_with_list(self.player_sprite, self.pins):
+            self.life_check()
+
+    def return_to_start(self):
+        self.player_sprite.center_x = PLAYER_START_X
+        self.player_sprite.center_y = PLAYER_START_Y
+        self.view_left = 0
+        self.view_bottom = 0
+
+    def life_check(self):
+        if self.life >= 2:
+            self.life -= 1
+            self.draw_life_counter()
+            arcade.play_sound(self.game_over_sound)
+            self.return_to_start()
+        elif self.life == 1:
             self.window.show_view((GameOver(self)))
             arcade.play_sound(self.game_over_sound)
 
@@ -475,5 +518,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
