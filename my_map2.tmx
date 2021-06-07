@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="12" nextobjectid="22">
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="40" height="7" tilewidth="128" tileheight="128" infinite="0" nextlayerid="12" nextobjectid="29">
  <tileset firstgid="1" name="ground" tilewidth="129" tileheight="129" tilecount="18" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -397,19 +397,24 @@
    <property name="change_x" type="float" value="2"/>
    <property name="change_y" type="float" value="2"/>
   </properties>
-  <object id="18" gid="13" x="2432" y="385" width="128" height="93"/>
-  <object id="19" gid="14" x="2560.67" y="385" width="128" height="93"/>
-  <object id="20" gid="15" x="2689.33" y="384.333" width="128" height="93"/>
   <object id="21" gid="14" x="4736" y="769" width="128" height="93">
    <properties>
-    <property name="boundary_top" type="float" value="256"/>
-    <property name="change_y" type="float" value="2"/>
+    <property name="boundary_bottom" type="float" value="64"/>
+    <property name="boundary_top" type="float" value="384"/>
+    <property name="change_y" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="26" gid="14" x="2560.5" y="386.5" width="286.667" height="96">
+   <properties>
+    <property name="boundary_left" type="float" value="1728"/>
+    <property name="boundary_right" type="float" value="2496"/>
+    <property name="change_x" type="float" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <layer id="1" name="ground" width="40" height="7">
   <data encoding="base64" compression="zlib">
-   eJxjYBgF9AS8QMwHxPyD3ExamgsCjEDMhEcOGTDhUUsrwALErFjEQW7jAGIhJMwKxfR0I8x9TEiYHeo2VjyYiUQMA/jYyJgZKg5zBwDnvwFQ
+   eJxjYBgFhAAvEPMBMT8NzCLHbGq6Z6AAIxAz4ZFDBkx41NIKsAAxKxZxkNs4gFgICbNCMT3dCHMfExJmh7qNFQ9mIhHDAD42MmaGisPcAQCLLgF6
   </data>
  </layer>
  <objectgroup id="3" name="background">
@@ -417,12 +422,13 @@
   <object id="8" gid="124" x="39" y="771" width="90" height="54"/>
   <object id="9" gid="124" x="316" y="769" width="90" height="54"/>
   <object id="10" gid="124" x="1819" y="771" width="90" height="54"/>
-  <object id="11" gid="121" x="1999" y="420" width="50" height="41"/>
-  <object id="12" gid="120" x="2075" y="419" width="49" height="41"/>
+  <object id="11" gid="121" x="2083" y="292" width="50" height="41"/>
+  <object id="12" gid="120" x="2150.33" y="292" width="49" height="41"/>
   <object id="13" gid="120" x="1548" y="770" width="49" height="41"/>
   <object id="14" gid="121" x="4196" y="766" width="50" height="41"/>
   <object id="15" gid="121" x="4527" y="769" width="50" height="41"/>
   <object id="16" gid="126" x="20.3333" y="769.667" width="282" height="301"/>
+  <object id="22" gid="69" x="2094" y="291.333" width="128" height="128"/>
  </objectgroup>
  <layer id="9" name="don'touch" width="40" height="7">
   <data encoding="base64" compression="zlib">

@@ -6,7 +6,7 @@ import time
 import sys
 
 # Constants
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Platformer"
 SPRITE_PIXEL_SIZE = 128
@@ -21,8 +21,8 @@ PLAYER_START_X = 256
 PLAYER_START_Y = 192
 
 # Viewpoint margin
-LEFT_VIEWPORT_MARGIN = 50
-RIGHT_VIEWPORT_MARGIN = 300
+LEFT_VIEWPORT_MARGIN = 300
+RIGHT_VIEWPORT_MARGIN = 900
 TOP_VIEWPORT_MARGIN = 150
 BOTTOM_VIEWPORT_MARGIN = 150
 
@@ -59,7 +59,7 @@ class LevelSelect(arcade.View):
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
         arcade.draw_text("SELECT THE LEVEL. PRESS KEY ON YOUR KEYBOARD", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
-        arcade.draw_text("ESC TO BACK TO MENU", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+        arcade.draw_text("ESC TO BACK TO MENU", SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_key_press(self, key, _modifiers):
@@ -314,7 +314,7 @@ class MyGame(arcade.View):
         jumping_left_textures = [arcade.load_texture(jumping_path, mirrored=True)]
 
         # Create the sprite
-        player = arcade.AnimatedWalkingSprite()
+        player = arcade.AnimatedWalkingSprite(scale=0.8)
 
         # Add the proper textures
         player.stand_left_textures = standing_left_textures
@@ -415,11 +415,12 @@ class MyGame(arcade.View):
 
     def update(self, delta_time):
         """ Movement and game logic """
+
         # Move the player with the physics engine
         self.physics_engine.update()
 
         if self.player_sprite.center_y < -100:
-
+            self.window.show_view((GameOver(self)))
             self.player_sprite.center_x = PLAYER_START_X
             self.player_sprite.center_y = PLAYER_START_Y
             self.view_left = 0
@@ -428,17 +429,17 @@ class MyGame(arcade.View):
         self.scroll_viewport()
         self.player_sprite.update_animation(delta_time)
         self.wall_list.update()
-        # for wall in self.wall_list:
-        # if wall.boundary_right and wall.right > wall.boundary_right and wall.change_x > 0:
-        #         wall.change_x *= -1
-        #     if wall.boundary_left and wall.left < wall.boundary_left and wall.change_x < 0:
-        #         wall.change_x *= -1
-        #     if wall.boundary_top and wall.top > wall.boundary_top and wall.change_y > 0:
-        #         wall.change_y *= -1
-        #     if wall.boundary_bottom and wall.bottom < wall.boundary_bottom and wall.change_y < 0:
-        #         wall.change_y *= -1
 
-        #
+        for wall in self.wall_list:
+            if wall.boundary_right and wall.right > wall.boundary_right and wall.change_x > 0:
+                wall.change_x *= -1
+            elif wall.boundary_left and wall.left < wall.boundary_left and wall.change_x < 0:
+                wall.change_x *= -1
+            elif wall.boundary_top and wall.top > wall.boundary_top and wall.change_y > 0:
+                wall.change_y *= -1
+            elif wall.boundary_bottom and wall.bottom < wall.boundary_bottom and wall.change_y < 0:
+                wall.change_y *= -1
+
         collected_coins = arcade.check_for_collision_with_list(
             sprite=self.player_sprite, sprite_list=self.coin_list
         )
