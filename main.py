@@ -14,7 +14,7 @@ SPRITE_PIXEL_SIZE = 128
 # Movement of player
 MOVEMENT_SPEED = 5
 GRAVITY = 1
-PLAYER_JUMP_SPEED = 15
+PLAYER_JUMP_SPEED = 20
 
 # Position of player
 PLAYER_START_X = 256
@@ -34,19 +34,47 @@ class GameMenu(arcade.View):
     def on_draw(self):
         """ Draw the menu """
         arcade.start_render()
-        arcade.draw_lrwh_rectangle_textured(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT,
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
-        arcade.draw_text("Press ENTER to start the game or I for instructions", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+        arcade.draw_text("Press ENTER to select the level or I for instructions", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ENTER:
-            game_view = MyGame()
-            game_view.setup()
+            game_view = LevelSelect()
             self.window.show_view(game_view)
         elif key == arcade.key.I:
             instructions_view = Instructions()
             self.window.show_view(instructions_view)
+
+
+class LevelSelect(arcade.View):
+    def __init__(self):
+        super().__init__()
+
+    def on_draw(self):
+        """ Draw the menu """
+        arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+        arcade.draw_text("SELECT THE LEVEL. PRESS KEY ON YOUR KEYBOARD", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_text("ESC TO BACK TO MENU", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+
+    def on_key_press(self, key, _modifiers):
+        if key == arcade.key.KEY_1:
+            game_view = MyGame()
+            game_view.setup()
+            self.window.show_view(game_view)
+        elif key == arcade.key.KEY_2:
+            game_view = MyGame()
+            game_view.level = 2
+            game_view.setup()
+            self.window.show_view(game_view)
+        elif key == arcade.key.ESCAPE:
+            title_view = GameMenu()
+            self.window.show_view(title_view)
 
 
 class Instructions(arcade.View):
@@ -103,7 +131,36 @@ class ScoreTable(arcade.View):
 
 
 class GameOver(arcade.View):
-    pass
+    def __init__(self, game_view):
+        super().__init__()
+        self.game_view = game_view
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=10)
+
+    def on_draw(self):
+        """ Draw the menu """
+        arcade.start_render()
+        arcade.draw_lrtb_rectangle_filled(
+            left=self.game_view.view_left,
+            right=self.game_view.view_left + SCREEN_WIDTH,
+            top=self.game_view.view_bottom + SCREEN_HEIGHT,
+            bottom=self.game_view.view_bottom,
+            color=self.fill_color,
+        )
+        arcade.draw_text("GAME OVER", self.game_view.view_left + 200, self.game_view.view_bottom + 200,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+
+    def on_key_press(self, key, _modifiers):
+        if key == arcade.key.ENTER:
+            self.game_view.player_sprite.change_x = 0
+            self.game_view.player_sprite.change_y = 0
+            self.game_view.player_sprite.center_x = PLAYER_START_X
+            self.game_view.player_sprite.center_x = PLAYER_START_X
+            self.window.show_view(self.game_view)
+            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+        elif key == arcade.key.ESCAPE:
+            title_view = GameMenu()
+            self.window.show_view(title_view)
+            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
 
 
 class Congrats(arcade.View):
@@ -148,7 +205,10 @@ class MyGame(arcade.View):
         self.wall_list = None
         self.coin_list = None
         self.background = None
+        self.foreground = None
         self.goal = None
+        self.moving = None
+        self.pins = None
 
         # Set up the player
         self.player_sprite = None
@@ -186,7 +246,7 @@ class MyGame(arcade.View):
         if self.music:
             self.music.stop(self.current_player)
 
-    # play next song
+        # play next song
         self.music = arcade.Sound(self.music_list[self.current_song_index], streaming=True)
         self.current_player = self.music.play(volume=0.1, loop=True)
         time.sleep(0.03)
@@ -206,10 +266,14 @@ class MyGame(arcade.View):
         my_map = arcade.tilemap.read_tmx(f"my_map{self.level}.tmx")
         self.background = arcade.tilemap.process_layer(map_object=my_map, layer_name="background", scaling=0.7)
         self.wall_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="ground", scaling=0.7)
+        self.pins = arcade.tilemap.process_layer(map_object=my_map, layer_name="don'touch", scaling=0.7)
         self.goal = arcade.tilemap.process_layer(map_object=my_map, layer_name="goal", scaling=0.7)
         self.foreground = arcade.tilemap.process_layer(map_object=my_map, layer_name="foreground", scaling=0.7)
-        # add water in another layers for level 2
+        self.moving = arcade.tilemap.process_layer(map_object=my_map, layer_name="moving-platform", scaling=0.7)
         self.coin_list = arcade.tilemap.process_layer(map_object=my_map, layer_name="collectable", scaling=0.7)
+
+        for sprite in self.moving:
+            self.wall_list.append(sprite)
 
         self.end_of_map = my_map.map_size.width
         self.map_width = (my_map.map_size.width - 1) * my_map.tile_size.width
@@ -317,10 +381,11 @@ class MyGame(arcade.View):
         #                                                 arcade.load_texture(f"png_ground/BG/BG.png"))
         self.background.draw()
         self.wall_list.draw()
+        self.pins.draw()
         self.goal.draw()
-        self.foreground.draw()
         self.coin_list.draw()
         self.player_list.draw()
+        self.foreground.draw()
         score_text = f"Score: {self.score}"
         arcade.draw_text(score_text, start_x=10 + self.view_left,
                          start_y=550 + self.view_bottom, color=arcade.csscolor.GOLD, font_size=40)
@@ -339,7 +404,7 @@ class MyGame(arcade.View):
             pause = PauseView(self)
             self.window.show_view(pause)
         elif key == arcade.key.Q:
-            sys.quit()
+            sys.exit()
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -362,7 +427,18 @@ class MyGame(arcade.View):
 
         self.scroll_viewport()
         self.player_sprite.update_animation(delta_time)
+        self.wall_list.update()
+        # for wall in self.wall_list:
+        # if wall.boundary_right and wall.right > wall.boundary_right and wall.change_x > 0:
+        #         wall.change_x *= -1
+        #     if wall.boundary_left and wall.left < wall.boundary_left and wall.change_x < 0:
+        #         wall.change_x *= -1
+        #     if wall.boundary_top and wall.top > wall.boundary_top and wall.change_y > 0:
+        #         wall.change_y *= -1
+        #     if wall.boundary_bottom and wall.bottom < wall.boundary_bottom and wall.change_y < 0:
+        #         wall.change_y *= -1
 
+        #
         collected_coins = arcade.check_for_collision_with_list(
             sprite=self.player_sprite, sprite_list=self.coin_list
         )
@@ -383,9 +459,13 @@ class MyGame(arcade.View):
             self.window.show_view(bravo)
             arcade.play_sound(self.finish_level_sound)
 
+        if arcade.check_for_collision_with_list(self.player_sprite, self.pins):
+            self.window.show_view((GameOver(self)))
+            arcade.play_sound(self.game_over_sound)
+
 
 def main():
-    """ Main method """
+    " "" Main method """
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     start_view = GameMenu()
     window.show_view(start_view)
