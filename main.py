@@ -26,21 +26,26 @@ RIGHT_VIEWPORT_MARGIN = 300
 TOP_VIEWPORT_MARGIN = 150
 BOTTOM_VIEWPORT_MARGIN = 150
 
-BUTTONS = {'big_left': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+BUTTONS = {
+           'big_left': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
                         SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "sys.exit()"],
            'big_right': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
                          SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 9, "self.window.show_view(LevelSelect())"],
-           'author': [arcade.load_texture("images/HUD/hudJewel_yellow.png"), SCREEN_WIDTH / 15, SCREEN_HEIGHT / 1.05],
+           'author': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                      SCREEN_WIDTH / 15, SCREEN_HEIGHT / 1.05, "self.window.show_view(Author())"],
            'instruction': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
                            SCREEN_WIDTH / 1.07, SCREEN_HEIGHT / 1.05, "self.window.show_view(Instructions())"],
-           'scores' : [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                       SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.05, "self.window.show_view(ScoreTable())"],
+           'scores': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                      SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.05, "self.window.show_view(ScoreTable())"],
            'first_level': [arcade.load_texture("images/HUD/hud1.png"),
                            SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.64],
            'second_level': [arcade.load_texture("images/HUD/hud2.png"),
                             SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.5],
            'escape_level': [arcade.load_texture("images/HUD/hudX.png"),
-                            134, 237]}
+                            SCREEN_WIDTH / 6, SCREEN_HEIGHT / 2.5],
+           'menu': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                            SCREEN_WIDTH / 6, SCREEN_HEIGHT / 5, "self.window.show_view(GameMenu())"]
+           }
 
 
 class GameMenu(arcade.View):
@@ -67,22 +72,23 @@ class GameMenu(arcade.View):
                          arcade.color.BLACK, font_size=20, anchor_x="center")
         arcade.draw_text("SELECT LEVEL", SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 10,
                          arcade.color.BLACK, font_size=17, anchor_x="center")
+
         arcade.draw_scaled_texture_rectangle(BUTTONS['author'][1], BUTTONS['author'][2],
                                              BUTTONS['author'][0], scale=0.7)
         arcade.draw_scaled_texture_rectangle(BUTTONS['instruction'][1], BUTTONS['instruction'][2],
                                              BUTTONS['instruction'][0], scale=0.7)
         arcade.draw_scaled_texture_rectangle(BUTTONS['scores'][1], BUTTONS['scores'][2],
                                              BUTTONS['scores'][0], scale=0.7)
-        arcade.draw_text("?", BUTTONS['instruction'][1], BUTTONS['instruction'][2]-15,
+        arcade.draw_text("?", BUTTONS['instruction'][1], BUTTONS['instruction'][2] - 15,
                          arcade.color.BLACK, font_size=25, anchor_x="center")
-        arcade.draw_text("S", BUTTONS['scores'][1], BUTTONS['scores'][2]-15,
-                         arcade.color.BLACK, font_size=25, anchor_x="center")
-        arcade.draw_text("A", BUTTONS['author'][1], BUTTONS['author'][2]-15,
+        arcade.draw_text("Scores", BUTTONS['scores'][1], BUTTONS['scores'][2] - 5,
+                         arcade.color.BLACK, font_size=10, anchor_x="center")
+        arcade.draw_text("A", BUTTONS['author'][1], BUTTONS['author'][2] - 15,
                          arcade.color.BLACK, font_size=25, anchor_x="center")
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         button_list = [BUTTONS['big_right'], BUTTONS['big_right'],
-                  BUTTONS['instruction'], BUTTONS['scores'], BUTTONS['author']]
+                       BUTTONS['instruction'], BUTTONS['scores'], BUTTONS['author']]
         self.eval_button(x, y, button_list)
 
     def eval_button(self, x, y, button_list):
@@ -145,15 +151,50 @@ class Instructions(arcade.View):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
-        arcade.draw_text("Collect coins and find the exit! Use arrow keys to run and space bar for jump.",
-                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, arcade.color.BLACK, font_size=30, anchor_x="center")
-        arcade.draw_text("Press escape to return to the menu",
-                         SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, arcade.color.BLACK, font_size=30, align="right")
+        arcade.draw_text("INSTRUCTION", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2, arcade.color.BLACK, font_size=50,
+                         anchor_x="center")
 
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.ESCAPE:
-            title_view = GameMenu()
-            self.window.show_view(title_view)
+        arcade.draw_text("Collect coins and find the exit!", SCREEN_WIDTH / 2,
+                         SCREEN_HEIGHT / 1.5, arcade.color.ORANGE_PEEL, font_size=50,
+                         anchor_x="center")
+        arcade.draw_text("Use arrow keys to run and space bar for jump.\n\n"
+                         "Press P to pause the game",
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2.3, arcade.color.BLACK, font_size=30, anchor_x="center")
+
+        draw_menu_button()
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        button_list = [BUTTONS['menu']]
+        GameMenu().eval_button(x, y, button_list)
+
+
+def draw_menu_button():
+    arcade.draw_scaled_texture_rectangle(BUTTONS['menu'][1], BUTTONS['menu'][2],
+                                         BUTTONS['menu'][0], scale=1.4)
+    arcade.draw_text("MENU",
+                     SCREEN_WIDTH / 7.7, SCREEN_HEIGHT / 5.5, arcade.color.BLACK, font_size=20, align="right")
+
+
+class Author(arcade.View):
+    def __init__(self):
+        super().__init__()
+
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+        arcade.draw_text("ABOUT AUTHOR", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2, arcade.color.ORANGE_PEEL, font_size=50,
+                         anchor_x="center")
+        arcade.draw_text("Math student \n\n"
+                         "who played a lot of platformers as a child.\n\n"
+                         "Happy if you enjoy the game",
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, arcade.color.RED, font_size=30,
+                         anchor_x="center")
+        draw_menu_button()
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        button_list = [BUTTONS['menu']]
+        GameMenu().eval_button(x, y, button_list)
 
 
 class PauseView(arcade.View):
@@ -161,10 +202,10 @@ class PauseView(arcade.View):
         super().__init__()
         self.game_view = game_view
 
-        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=100)
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=80)
 
     def on_draw(self):
-        arcade.start_render()
+        self.game_view.on_draw()
         arcade.draw_lrtb_rectangle_filled(
             left=self.game_view.view_left,
             right=self.game_view.view_left + SCREEN_WIDTH,
@@ -172,9 +213,9 @@ class PauseView(arcade.View):
             bottom=self.game_view.view_bottom,
             color=self.fill_color,
         )
-        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 100,
+        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
                          arcade.color.YELLOW_ROSE, font_size=20, align="center")
-        arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
+        arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 300,
                          arcade.color.YELLOW_ROSE, font_size=20, align="right")
 
     def on_key_press(self, key, _modifiers):
@@ -204,7 +245,11 @@ class ScoreTable(arcade.View):
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
         self.show_table()
+        draw_menu_button()
 
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        button_list = [BUTTONS['menu']]
+        GameMenu().eval_button(x, y, button_list)
 
 class GameOver(arcade.View):
     def __init__(self, game_view):
