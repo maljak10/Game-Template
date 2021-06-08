@@ -31,12 +31,16 @@ BUTTONS = {'big_left': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
            'big_right': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
                          SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 9, "self.window.show_view(LevelSelect())"],
            'author': [arcade.load_texture("images/HUD/hudJewel_yellow.png"), SCREEN_WIDTH / 15, SCREEN_HEIGHT / 1.05],
-           'instruction': [arcade.load_texture("images/HUD/hudJewel_yellow.png"), SCREEN_WIDTH / 1.07,
-                           SCREEN_HEIGHT / 1.05, "self.window.show_view(Instructions())"],
+           'instruction': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                           SCREEN_WIDTH / 1.07, SCREEN_HEIGHT / 1.05, "self.window.show_view(Instructions())"],
            'scores' : [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
                        SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.05, "self.window.show_view(ScoreTable())"],
-           'first_level': arcade.load_texture("images/HUD/hud1.png"),
-           'second_level': arcade.load_texture("images/HUD/hud2.png")}
+           'first_level': [arcade.load_texture("images/HUD/hud1.png"),
+                           SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.64],
+           'second_level': [arcade.load_texture("images/HUD/hud2.png"),
+                            SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.5],
+           'escape_level': [arcade.load_texture("images/HUD/hudX.png"),
+                            134, 237]}
 
 
 class GameMenu(arcade.View):
@@ -77,9 +81,12 @@ class GameMenu(arcade.View):
                          arcade.color.BLACK, font_size=25, anchor_x="center")
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        button = [BUTTONS['big_right'], BUTTONS['big_right'],
+        button_list = [BUTTONS['big_right'], BUTTONS['big_right'],
                   BUTTONS['instruction'], BUTTONS['scores'], BUTTONS['author']]
-        for i in button:
+        self.eval_button(x, y, button_list)
+
+    def eval_button(self, x, y, button_list):
+        for i in button_list:
             texture = i[0]
             w = i[1]
             h = i[2]
@@ -99,24 +106,35 @@ class LevelSelect(arcade.View):
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"level_select.png"))
-        arcade.draw_text("SELECT THE LEVEL. PRESS KEY ON YOUR KEYBOARD", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
-                         arcade.color.BLACK, font_size=30, anchor_x="center")
-        arcade.draw_text("ESC TO BACK TO MENU", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 7,
+        arcade.draw_text("SELECT THE LEVEL", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
-    def on_key_press(self, key, _modifiers):
-        if key == arcade.key.KEY_1:
-            game_view = MyGame()
-            game_view.setup()
-            self.window.show_view(game_view)
-        elif key == arcade.key.KEY_2:
-            game_view = MyGame()
-            game_view.level = 2
-            game_view.setup()
-            self.window.show_view(game_view)
-        elif key == arcade.key.ESCAPE:
-            title_view = GameMenu()
-            self.window.show_view(title_view)
+        arcade.draw_scaled_texture_rectangle(BUTTONS['first_level'][1], BUTTONS['first_level'][2],
+                                             BUTTONS['first_level'][0], scale=0.7)
+        arcade.draw_scaled_texture_rectangle(BUTTONS['second_level'][1], BUTTONS['second_level'][2],
+                                             BUTTONS['second_level'][0], scale=0.7)
+        arcade.draw_scaled_texture_rectangle(BUTTONS['escape_level'][1], BUTTONS['escape_level'][2],
+                                             BUTTONS['escape_level'][0], scale=0.7)
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        button_list = [BUTTONS['first_level'], BUTTONS['second_level'], BUTTONS['escape_level']]
+        for i in button_list:
+            texture = i[0]
+            w = i[1]
+            h = i[2]
+            if w - texture.width // 2 <= x <= w + texture.width // 2:
+                if h - texture.height // 2 <= y <= h + texture.height // 2:
+                    if i == BUTTONS['first_level']:
+                        game_view = MyGame()
+                        game_view.setup()
+                        self.window.show_view(game_view)
+                    elif i == BUTTONS['second_level']:
+                        game_view = MyGame()
+                        game_view.level = 2
+                        game_view.setup()
+                        self.window.show_view(game_view)
+                    elif i == BUTTONS['escape_level']:
+                        self.window.show_view(GameMenu())
 
 
 class Instructions(arcade.View):
