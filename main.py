@@ -6,7 +6,7 @@ import time
 import sys
 
 # Constants
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Platformer"
 SPRITE_PIXEL_SIZE = 128
@@ -26,6 +26,18 @@ RIGHT_VIEWPORT_MARGIN = 300
 TOP_VIEWPORT_MARGIN = 150
 BOTTOM_VIEWPORT_MARGIN = 150
 
+BUTTONS = {'big_left': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                        SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "sys.exit()"],
+           'big_right': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                         SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 9, "self.window.show_view(LevelSelect())"],
+           'author': [arcade.load_texture("images/HUD/hudJewel_yellow.png"), SCREEN_WIDTH / 15, SCREEN_HEIGHT / 1.05],
+           'instruction': [arcade.load_texture("images/HUD/hudJewel_yellow.png"), SCREEN_WIDTH / 1.07,
+                           SCREEN_HEIGHT / 1.05, "self.window.show_view(Instructions())"],
+           'scores' : [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                       SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.05, "self.window.show_view(ScoreTable())"],
+           'first_level': arcade.load_texture("images/HUD/hud1.png"),
+           'second_level': arcade.load_texture("images/HUD/hud2.png")}
+
 
 class GameMenu(arcade.View):
     def __init__(self):
@@ -35,19 +47,45 @@ class GameMenu(arcade.View):
         """ Draw the menu """
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture(f"png_ground/BG/BG.png"))
-        arcade.draw_text("Press ENTER to select the level or I for instructions", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                         arcade.color.BLACK, font_size=30, anchor_x="center")
+                                            arcade.load_texture("png_ground/BG/BG.png"))
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture("game_menu.png"))
+        arcade.draw_text("ADVENTURE JUNGLE", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
+                         arcade.color.ORANGE_PEEL, font_size=40, anchor_x="center")
+        self.draw_control_buttons()
 
-    def on_key_press(self, key, _modifiers):
-        if key == arcade.key.ENTER:
-            game_view = LevelSelect()
-            self.window.show_view(game_view)
-        elif key == arcade.key.I:
-            instructions_view = Instructions()
-            self.window.show_view(instructions_view)
-        elif key == arcade.key.S:
-            self.window.show_view(ScoreTable())
+    def draw_control_buttons(self):
+        arcade.draw_scaled_texture_rectangle(BUTTONS['big_left'][1], BUTTONS['big_left'][2],
+                                             BUTTONS['big_left'][0], scale=1.4)
+        arcade.draw_scaled_texture_rectangle(BUTTONS['big_right'][1], BUTTONS['big_right'][2],
+                                             BUTTONS['big_right'][0], scale=1.4)
+        arcade.draw_text("EXIT", SCREEN_WIDTH / 10, SCREEN_HEIGHT / 10,
+                         arcade.color.BLACK, font_size=20, anchor_x="center")
+        arcade.draw_text("SELECT LEVEL", SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 10,
+                         arcade.color.BLACK, font_size=17, anchor_x="center")
+        arcade.draw_scaled_texture_rectangle(BUTTONS['author'][1], BUTTONS['author'][2],
+                                             BUTTONS['author'][0], scale=0.7)
+        arcade.draw_scaled_texture_rectangle(BUTTONS['instruction'][1], BUTTONS['instruction'][2],
+                                             BUTTONS['instruction'][0], scale=0.7)
+        arcade.draw_scaled_texture_rectangle(BUTTONS['scores'][1], BUTTONS['scores'][2],
+                                             BUTTONS['scores'][0], scale=0.7)
+        arcade.draw_text("?", BUTTONS['instruction'][1], BUTTONS['instruction'][2]-15,
+                         arcade.color.BLACK, font_size=25, anchor_x="center")
+        arcade.draw_text("S", BUTTONS['scores'][1], BUTTONS['scores'][2]-15,
+                         arcade.color.BLACK, font_size=25, anchor_x="center")
+        arcade.draw_text("A", BUTTONS['author'][1], BUTTONS['author'][2]-15,
+                         arcade.color.BLACK, font_size=25, anchor_x="center")
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        button = [BUTTONS['big_right'], BUTTONS['big_right'],
+                  BUTTONS['instruction'], BUTTONS['scores'], BUTTONS['author']]
+        for i in button:
+            texture = i[0]
+            w = i[1]
+            h = i[2]
+            if w - texture.width // 2 <= x <= w + texture.width // 2:
+                if h - texture.height // 2 <= y <= h + texture.height // 2:
+                    eval(i[3])
 
 
 class LevelSelect(arcade.View):
@@ -59,9 +97,11 @@ class LevelSelect(arcade.View):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
-        arcade.draw_text("SELECT THE LEVEL. PRESS KEY ON YOUR KEYBOARD", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture(f"level_select.png"))
+        arcade.draw_text("SELECT THE LEVEL. PRESS KEY ON YOUR KEYBOARD", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
-        arcade.draw_text("ESC TO BACK TO MENU", SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4,
+        arcade.draw_text("ESC TO BACK TO MENU", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 7,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_key_press(self, key, _modifiers):
@@ -103,7 +143,7 @@ class PauseView(arcade.View):
         super().__init__()
         self.game_view = game_view
 
-        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=150)
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=100)
 
     def on_draw(self):
         arcade.start_render()
@@ -114,10 +154,10 @@ class PauseView(arcade.View):
             bottom=self.game_view.view_bottom,
             color=self.fill_color,
         )
-        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 600,
-                         arcade.color.YELLOW_ROSE, font_size=50, align="center")
+        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 100,
+                         arcade.color.YELLOW_ROSE, font_size=20, align="center")
         arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
-                         arcade.color.YELLOW_ROSE, font_size=50, align="right")
+                         arcade.color.YELLOW_ROSE, font_size=20, align="right")
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.P:
@@ -134,15 +174,17 @@ class ScoreTable(arcade.View):
 
     def show_table(self):
         arcade.draw_text("BEST SCORES", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
-                         arcade.color.WHITE, font_size=30, anchor_x="center")
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
         t = open('scores.txt', 'r')
         table = t.readlines()
         for i in table:
-            arcade.draw_text(i, SCREEN_WIDTH/4, SCREEN_HEIGHT/4,
-                             arcade.color.WHITE, font_size=30, anchor_x="center")
+            arcade.draw_text(i, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4,
+                             arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_draw(self):
         arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture(f"png_ground/BG/BG.png"))
         self.show_table()
 
 
@@ -336,7 +378,7 @@ class MyGame(arcade.View):
         jumping_left_textures = [arcade.load_texture(jumping_path, mirrored=True)]
 
         # Create the sprite
-        player = arcade.AnimatedWalkingSprite(scale=0.8)
+        player = arcade.AnimatedWalkingSprite()
 
         # Add the proper textures
         player.stand_left_textures = standing_left_textures
@@ -529,6 +571,7 @@ class MyGame(arcade.View):
         f = open('scores.txt', 'w')
         f.write("Level: " + str(self.level) + " score: " + str(self.score))
         f.close()
+
 
 def main():
     " "" Main method """
