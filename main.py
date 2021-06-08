@@ -22,7 +22,7 @@ PLAYER_START_Y = 192
 
 # Viewpoint margin
 LEFT_VIEWPORT_MARGIN = 300
-RIGHT_VIEWPORT_MARGIN = 900
+RIGHT_VIEWPORT_MARGIN = 300
 TOP_VIEWPORT_MARGIN = 150
 BOTTOM_VIEWPORT_MARGIN = 150
 
@@ -46,6 +46,8 @@ class GameMenu(arcade.View):
         elif key == arcade.key.I:
             instructions_view = Instructions()
             self.window.show_view(instructions_view)
+        elif key == arcade.key.S:
+            self.window.show_view(ScoreTable())
 
 
 class LevelSelect(arcade.View):
@@ -127,7 +129,21 @@ class PauseView(arcade.View):
 
 
 class ScoreTable(arcade.View):
-    pass
+    def __init__(self):
+        super().__init__()
+
+    def show_table(self):
+        arcade.draw_text("BEST SCORES", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
+                         arcade.color.WHITE, font_size=30, anchor_x="center")
+        t = open('scores.txt', 'r')
+        table = t.readlines()
+        for i in table:
+            arcade.draw_text(i, SCREEN_WIDTH/4, SCREEN_HEIGHT/4,
+                             arcade.color.WHITE, font_size=30, anchor_x="center")
+
+    def on_draw(self):
+        arcade.start_render()
+        self.show_table()
 
 
 class GameOver(arcade.View):
@@ -156,6 +172,7 @@ class GameOver(arcade.View):
             self.game_view.return_to_start()
             self.game_view.life = 3
             self.game_view.score = 0
+            self.game_view.setup()
             self.window.show_view(self.game_view)
             arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
         elif key == arcade.key.ESCAPE:
@@ -177,6 +194,7 @@ class Congrats(arcade.View):
                          arcade.color.YELLOW_ROSE, font_size=30, align="right")
         arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
                          arcade.color.YELLOW_ROSE, font_size=30, align="right")
+        self.game_view.update_score()
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ESCAPE:
@@ -507,6 +525,10 @@ class MyGame(arcade.View):
             self.window.show_view((GameOver(self)))
             arcade.play_sound(self.game_over_sound)
 
+    def update_score(self):
+        f = open('scores.txt', 'w')
+        f.write("Level: " + str(self.level) + " score: " + str(self.score))
+        f.close()
 
 def main():
     " "" Main method """
