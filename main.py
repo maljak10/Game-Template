@@ -198,8 +198,8 @@ class Author(arcade.View):
         arcade.draw_text("ABOUT AUTHOR", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2, arcade.color.ORANGE_PEEL, font_size=50,
                          anchor_x="center")
         arcade.draw_text("Math student \n"
-                         "who was used to play \na lot of platform games.\n\n"
-                         "Happy \nif you enjoy the game!",
+                         "who was used to play \n platform games a lot.\n\n"
+                         "Enjoy the game!",
                          SCREEN_WIDTH / 3.1, SCREEN_HEIGHT / 2.4, arcade.color.LIGHT_CYAN, font_size=30,
                          anchor_x="center")
         draw_menu_button()
@@ -300,8 +300,16 @@ class GameOver(arcade.View):
             alpha=200)
         arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 400, self.game_view.view_bottom + 150,
                                              arcade.load_texture("images/Tiles/lockRed.png"), scale=1.4)
-        arcade.draw_text("GAME OVER", self.game_view.view_left + 400, self.game_view.view_bottom + 300,
+        arcade.draw_text("GAME OVER", self.game_view.view_left + 400, self.game_view.view_bottom + 400,
                          arcade.color.BLACK, font_size=50, anchor_x="center")
+        arcade.draw_text("PRESS ENTER TO REPLAY", self.game_view.view_left + 400, self.game_view.view_bottom + 300,
+                         arcade.color.ORANGE_PEEL, font_size=30, anchor_x="center")
+        PauseView(self.game_view).draw_menu_gameplay()
+        self.game_view.update_score()
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+        PauseView(self.game_view).eval_menu_gameplay(x, y)
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ENTER:
@@ -312,10 +320,6 @@ class GameOver(arcade.View):
             self.game_view.score = 0
             self.game_view.setup()
             self.window.show_view(self.game_view)
-            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
-        elif key == arcade.key.ESCAPE:
-            title_view = GameMenu()
-            self.window.show_view(title_view)
             arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
 
 
