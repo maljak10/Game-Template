@@ -276,6 +276,8 @@ class PauseView(arcade.View):
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         self.eval_menu_gameplay(x, y)
+        if self.game_view.music:
+            self.game_view.music.stop(self.game_view.current_player)
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.P:
