@@ -44,7 +44,7 @@ BUTTONS = {
            'escape_level': [arcade.load_texture("images/HUD/hudX.png"),
                             SCREEN_WIDTH / 6, SCREEN_HEIGHT / 2.5],
            'menu': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                            SCREEN_WIDTH / 6, SCREEN_HEIGHT / 5, "self.window.show_view(GameMenu())"]
+                            SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "self.window.show_view(GameMenu())"]
            }
 
 
@@ -150,7 +150,7 @@ class Instructions(arcade.View):
     def on_draw(self):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+                                            arcade.load_texture("png_ground/BG/BG.png"))
         arcade.draw_text("INSTRUCTION", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2, arcade.color.BLACK, font_size=50,
                          anchor_x="center")
 
@@ -172,7 +172,7 @@ def draw_menu_button():
     arcade.draw_scaled_texture_rectangle(BUTTONS['menu'][1], BUTTONS['menu'][2],
                                          BUTTONS['menu'][0], scale=1.4)
     arcade.draw_text("MENU",
-                     SCREEN_WIDTH / 7.7, SCREEN_HEIGHT / 5.5, arcade.color.BLACK, font_size=20, align="right")
+                     SCREEN_WIDTH / 15.5, SCREEN_HEIGHT / 9.5, arcade.color.BLACK, font_size=20, align="right")
 
 
 class Author(arcade.View):
@@ -183,53 +183,20 @@ class Author(arcade.View):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture(f"png_ground/BG/BG.png"))
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            arcade.load_texture("author.png"))
         arcade.draw_text("ABOUT AUTHOR", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2, arcade.color.ORANGE_PEEL, font_size=50,
                          anchor_x="center")
-        arcade.draw_text("Math student \n\n"
-                         "who used to play a lot of platform games.\n\n"
-                         "Happy if you enjoy the game",
-                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, arcade.color.RED, font_size=30,
+        arcade.draw_text("Math student \n"
+                         "who was used to play \na lot of platform games.\n\n"
+                         "Happy \nif you enjoy the game!",
+                         SCREEN_WIDTH / 3.1, SCREEN_HEIGHT / 2.4, arcade.color.LIGHT_CYAN, font_size=30,
                          anchor_x="center")
         draw_menu_button()
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         button_list = [BUTTONS['menu']]
         GameMenu().eval_button(x, y, button_list)
-
-
-class PauseView(arcade.View):
-    def __init__(self, game_view):
-        super().__init__()
-        self.game_view = game_view
-
-        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=80)
-
-    def on_draw(self):
-        self.game_view.on_draw()
-        arcade.draw_lrtb_rectangle_filled(
-            left=self.game_view.view_left,
-            right=self.game_view.view_left + SCREEN_WIDTH,
-            top=self.game_view.view_bottom + SCREEN_HEIGHT,
-            bottom=self.game_view.view_bottom,
-            color=self.fill_color,
-        )
-        arcade.draw_text("PAUSED", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
-                         arcade.color.RED_ORANGE, font_size=40, align="center")
-        arcade.draw_text("PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 300,
-                         arcade.color.YELLOW_ROSE, font_size=20, align="right")
-        arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 120, self.game_view.view_bottom + 150,
-                                             arcade.load_texture("images/HUD/hudJewel_yellow.png"), scale=1.4)
-        arcade.draw_text("MENU", self.game_view.view_left + 90, self.game_view.view_bottom + 145,
-                          arcade.color.BLACK, font_size=20, align="right")
-
-    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
-        button_list = [BUTTONS['menu']]
-        GameMenu().eval_button(x, y, button_list)
-
-    def on_key_press(self, key, _modifiers):
-        if key == arcade.key.P:
-            self.window.show_view(self.game_view)
 
 
 class ScoreTable(arcade.View):
@@ -257,14 +224,13 @@ class ScoreTable(arcade.View):
         GameMenu().eval_button(x, y, button_list)
 
 
-class GameOver(arcade.View):
+class PauseView(arcade.View):
     def __init__(self, game_view):
         super().__init__()
         self.game_view = game_view
-        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=90)
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=80)
 
     def on_draw(self):
-        """ Draw the menu """
         self.game_view.on_draw()
         arcade.draw_lrtb_rectangle_filled(
             left=self.game_view.view_left,
@@ -273,6 +239,44 @@ class GameOver(arcade.View):
             bottom=self.game_view.view_bottom,
             color=self.fill_color,
         )
+        arcade.draw_text("PAUSED", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
+                         arcade.color.RED_ORANGE, font_size=40, align="center")
+        arcade.draw_text("PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 300,
+                         arcade.color.YELLOW_ROSE, font_size=20, align="right")
+        self.draw_menu_gameplay()
+
+    def draw_menu_gameplay(self):
+        arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 80, self.game_view.view_bottom + 67,
+                                             arcade.load_texture("images/HUD/hudJewel_yellow.png"), scale=1.4)
+        arcade.draw_text("MENU", self.game_view.view_left + 50, self.game_view.view_bottom + 60,
+                         arcade.color.BLACK, font_size=20, align="center")
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+        button_list = [BUTTONS['menu']]
+        GameMenu().eval_button(x, y, button_list)
+
+    def on_key_press(self, key, _modifiers):
+        if key == arcade.key.P:
+            self.window.show_view(self.game_view)
+
+
+class GameOver(arcade.View):
+    def __init__(self, game_view):
+        super().__init__()
+        self.game_view = game_view
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=90)
+
+    def on_draw(self):
+        """ Draw the menu """
+        arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(
+            bottom_left_x=self.game_view.view_left,
+            bottom_left_y=self.game_view.view_bottom,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
+            texture=arcade.load_texture("JWDLx5AZBtI.jpg"),
+            alpha=200)
         arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 400, self.game_view.view_bottom + 150,
                                              arcade.load_texture("images/Tiles/lockRed.png"), scale=1.4)
         arcade.draw_text("GAME OVER", self.game_view.view_left + 400, self.game_view.view_bottom + 300,
@@ -301,8 +305,9 @@ class Congrats(arcade.View):
 
     def on_draw(self):
         arcade.start_render()
-        # arcade.draw_lrwh_rectangle_textured(0, 0, self.game_view.view_left, self.game_view.view_bottom,
-        #                                     arcade.load_texture(f"png_ground/BG/BG.png"))
+        # arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+        arcade.draw_lrwh_rectangle_textured(0, 0, self.game_view.view_left, self.game_view.view_bottom,
+                                            arcade.load_texture("congrats.png"))
         arcade.draw_text("CONGRATULATION", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
         self.level_status_draw()
