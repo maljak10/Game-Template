@@ -4,7 +4,7 @@
 ### Short description
 Jungle adventure is a jump'n'run game. Run and jump through multiple worlds, avoiding pins and deep water. Try to collect coins!
 
-![Alt text](images/Game-menu-screen.png?raw=true "menu")
+![Alt text](images/menu-screen.png?raw=true "menu")
 ![Alt text](images/Game_play_screen.png?raw=true "game_play")
 
 ### Technologies
