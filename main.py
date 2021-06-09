@@ -186,7 +186,7 @@ class Author(arcade.View):
         arcade.draw_text("ABOUT AUTHOR", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2, arcade.color.ORANGE_PEEL, font_size=50,
                          anchor_x="center")
         arcade.draw_text("Math student \n\n"
-                         "who played a lot of platformers as a child.\n\n"
+                         "who used to play a lot of platform games.\n\n"
                          "Happy if you enjoy the game",
                          SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, arcade.color.RED, font_size=30,
                          anchor_x="center")
@@ -213,18 +213,23 @@ class PauseView(arcade.View):
             bottom=self.game_view.view_bottom,
             color=self.fill_color,
         )
-        arcade.draw_text("PAUSED, PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
-                         arcade.color.YELLOW_ROSE, font_size=20, align="center")
-        arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 300,
+        arcade.draw_text("PAUSED", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
+                         arcade.color.RED_ORANGE, font_size=40, align="center")
+        arcade.draw_text("PRESS P TO RESUME", self.game_view.view_left + 100, self.game_view.view_bottom + 300,
                          arcade.color.YELLOW_ROSE, font_size=20, align="right")
+        arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 120, self.game_view.view_bottom + 150,
+                                             arcade.load_texture("images/HUD/hudJewel_yellow.png"), scale=1.4)
+        arcade.draw_text("MENU", self.game_view.view_left + 90, self.game_view.view_bottom + 145,
+                          arcade.color.BLACK, font_size=20, align="right")
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+        button_list = [BUTTONS['menu']]
+        GameMenu().eval_button(x, y, button_list)
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.P:
             self.window.show_view(self.game_view)
-        elif key == arcade.key.ESCAPE:
-            title_view = GameMenu()
-            self.window.show_view(title_view)
-            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
 
 
 class ScoreTable(arcade.View):
@@ -251,15 +256,16 @@ class ScoreTable(arcade.View):
         button_list = [BUTTONS['menu']]
         GameMenu().eval_button(x, y, button_list)
 
+
 class GameOver(arcade.View):
     def __init__(self, game_view):
         super().__init__()
         self.game_view = game_view
-        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=10)
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=90)
 
     def on_draw(self):
         """ Draw the menu """
-        arcade.start_render()
+        self.game_view.on_draw()
         arcade.draw_lrtb_rectangle_filled(
             left=self.game_view.view_left,
             right=self.game_view.view_left + SCREEN_WIDTH,
@@ -267,8 +273,10 @@ class GameOver(arcade.View):
             bottom=self.game_view.view_bottom,
             color=self.fill_color,
         )
-        arcade.draw_text("GAME OVER", self.game_view.view_left + 200, self.game_view.view_bottom + 200,
-                         arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 400, self.game_view.view_bottom + 150,
+                                             arcade.load_texture("images/Tiles/lockRed.png"), scale=1.4)
+        arcade.draw_text("GAME OVER", self.game_view.view_left + 400, self.game_view.view_bottom + 300,
+                         arcade.color.BLACK, font_size=50, anchor_x="center")
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ENTER:
@@ -292,28 +300,46 @@ class Congrats(arcade.View):
         self.game_view = game_view
 
     def on_draw(self):
-        self.game_view.on_draw()
-        arcade.draw_text("CONGRATULATION", self.game_view.view_left + 100, self.game_view.view_bottom + 600,
+        arcade.start_render()
+        # arcade.draw_lrwh_rectangle_textured(0, 0, self.game_view.view_left, self.game_view.view_bottom,
+        #                                     arcade.load_texture(f"png_ground/BG/BG.png"))
+        arcade.draw_text("CONGRATULATION", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
-        arcade.draw_text("TO NEXT LEVEL PRESS ENTER", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
-                         arcade.color.YELLOW_ROSE, font_size=30, align="right")
-        arcade.draw_text("TO BACK TO MENU PRESS ESC", self.game_view.view_left + 100, self.game_view.view_bottom + 200,
-                         arcade.color.YELLOW_ROSE, font_size=30, align="right")
+        self.level_status_draw()
+        arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 120, self.game_view.view_bottom + 150,
+                                             arcade.load_texture("images/HUD/hudJewel_yellow.png"), scale=1.4)
+        arcade.draw_text("MENU", self.game_view.view_left + 90, self.game_view.view_bottom + 145,
+                         arcade.color.BLACK, font_size=20, align="right")
         self.game_view.update_score()
 
-    def on_key_press(self, key, _modifiers):
-        if key == arcade.key.ESCAPE:
-            title_view = GameMenu()
-            self.window.show_view(title_view)
-            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+    def level_status_draw(self):
+        if self.game_view.level == 2:
+            arcade.draw_text("GAME FINISHED", self.game_view.view_left + 100,
+                             self.game_view.view_bottom + 300,
+                             arcade.color.YELLOW_ROSE, font_size=40, align="right")
+            arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 520, self.game_view.view_bottom + 150,
+                                                 arcade.load_texture("images/HUD/hudHeart_full.png"), scale=2)
+        else:
+            arcade.draw_text("TO NEXT LEVEL PRESS ENTER", self.game_view.view_left + 100,
+                             self.game_view.view_bottom + 300,
+                             arcade.color.YELLOW_ROSE, font_size=30, align="right")
+            arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 520, self.game_view.view_bottom + 150,
+                                                 arcade.load_texture("images/HUD/hudPlayer_green.png"), scale=2)
 
-        elif key == arcade.key.ENTER:
-            arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
-            self.game_view.level += 1
-            self.game_view.score = 0
-            self.game_view.life = 3
-            self.game_view.setup()
-            self.window.show_view(self.game_view)
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+        button_list = [BUTTONS['menu']]
+        GameMenu().eval_button(x, y, button_list)
+
+    def on_key_press(self, key, _modifiers):
+        if self.game_view.level != 2:
+            if key == arcade.key.ENTER:
+                arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+                self.game_view.level += 1
+                self.game_view.score = 0
+                self.game_view.life = 3
+                self.game_view.setup()
+                self.window.show_view(self.game_view)
 
 
 class MyGame(arcade.View):
