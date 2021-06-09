@@ -4,7 +4,6 @@
 """
 import arcade
 import time
-import sys
 
 # Constants
 SCREEN_WIDTH = 800
@@ -29,7 +28,7 @@ BOTTOM_VIEWPORT_MARGIN = 150
 
 BUTTONS = {
     'big_left': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                 SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "sys.exit()"],
+                 SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "arcade.close_window()"],
     'big_right': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
                   SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 9, "self.window.show_view(LevelSelect())"],
     'author': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
@@ -88,7 +87,7 @@ class GameMenu(arcade.View):
                          arcade.color.BLACK, font_size=25, anchor_x="center")
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        button_list = [BUTTONS['big_right'], BUTTONS['big_right'],
+        button_list = [BUTTONS['big_left'], BUTTONS['big_right'],
                        BUTTONS['instruction'], BUTTONS['scores'], BUTTONS['author']]
         self.eval_button(x, y, button_list)
 
@@ -596,8 +595,7 @@ class MyGame(arcade.View):
         elif key == arcade.key.P:
             pause = PauseView(self)
             self.window.show_view(pause)
-        elif key == arcade.key.Q:
-            sys.exit()
+
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
