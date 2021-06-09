@@ -1,5 +1,6 @@
 """
-  Platformer Game
+    Adventure Jungle
+    Simple Platformer Game
 """
 import arcade
 import time
@@ -27,25 +28,25 @@ TOP_VIEWPORT_MARGIN = 150
 BOTTOM_VIEWPORT_MARGIN = 150
 
 BUTTONS = {
-           'big_left': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                        SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "sys.exit()"],
-           'big_right': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                         SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 9, "self.window.show_view(LevelSelect())"],
-           'author': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                      SCREEN_WIDTH / 15, SCREEN_HEIGHT / 1.05, "self.window.show_view(Author())"],
-           'instruction': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                           SCREEN_WIDTH / 1.07, SCREEN_HEIGHT / 1.05, "self.window.show_view(Instructions())"],
-           'scores': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                      SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.05, "self.window.show_view(ScoreTable())"],
-           'first_level': [arcade.load_texture("images/HUD/hud1.png"),
-                           SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.64],
-           'second_level': [arcade.load_texture("images/HUD/hud2.png"),
-                            SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.5],
-           'escape_level': [arcade.load_texture("images/HUD/hudX.png"),
-                            SCREEN_WIDTH / 6, SCREEN_HEIGHT / 2.5],
-           'menu': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
-                            SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "self.window.show_view(GameMenu())"]
-           }
+    'big_left': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                 SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "sys.exit()"],
+    'big_right': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                  SCREEN_WIDTH / 1.1, SCREEN_HEIGHT / 9, "self.window.show_view(LevelSelect())"],
+    'author': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+               SCREEN_WIDTH / 15, SCREEN_HEIGHT / 1.05, "self.window.show_view(Author())"],
+    'instruction': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                    SCREEN_WIDTH / 1.07, SCREEN_HEIGHT / 1.05, "self.window.show_view(Instructions())"],
+    'scores': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+               SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.05, "self.window.show_view(ScoreTable())"],
+    'first_level': [arcade.load_texture("images/HUD/hud1.png"),
+                    SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.64],
+    'second_level': [arcade.load_texture("images/HUD/hud2.png"),
+                     SCREEN_WIDTH / 1.2, SCREEN_HEIGHT / 1.5],
+    'escape_level': [arcade.load_texture("images/HUD/hudX.png"),
+                     SCREEN_WIDTH / 6, SCREEN_HEIGHT / 2.5],
+    'menu': [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+             SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9, "self.window.show_view(GameMenu())"]
+}
 
 
 class GameMenu(arcade.View):
@@ -251,10 +252,18 @@ class PauseView(arcade.View):
         arcade.draw_text("MENU", self.game_view.view_left + 50, self.game_view.view_bottom + 60,
                          arcade.color.BLACK, font_size=20, align="center")
 
+    def eval_menu_gameplay(self, x, y):
+        button_list = [arcade.load_texture("images/HUD/hudJewel_yellow.png"),
+                       SCREEN_WIDTH / 10, SCREEN_HEIGHT / 9,
+                       "self.window.show_view(GameMenu())"]
+        texture = button_list[0]
+        if button_list[1] - texture.width // 2 <= x <= button_list[1] + texture.width // 2:
+            if button_list[2] - texture.height // 2 <= y <= button_list[2] + texture.height // 2:
+                eval(button_list[3])
+                arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
+
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
-        button_list = [BUTTONS['menu']]
-        GameMenu().eval_button(x, y, button_list)
+        self.eval_menu_gameplay(x, y)
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.P:
@@ -302,39 +311,36 @@ class Congrats(arcade.View):
     def __init__(self, game_view):
         super().__init__()
         self.game_view = game_view
+        self.fill_color = arcade.make_transparent_color(arcade.color.WHITE, transparency=90)
 
     def on_draw(self):
+        """ Draw the congratulations"""
         arcade.start_render()
-        # arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
-        arcade.draw_lrwh_rectangle_textured(0, 0, self.game_view.view_left, self.game_view.view_bottom,
-                                            arcade.load_texture("congrats.png"))
-        arcade.draw_text("CONGRATULATION", self.game_view.view_left + 100, self.game_view.view_bottom + 400,
+        arcade.draw_lrwh_rectangle_textured(
+            bottom_left_x=self.game_view.view_left,
+            bottom_left_y=self.game_view.view_bottom,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
+            texture=arcade.load_texture("congrats.png"))
+        arcade.draw_text("CONGRATULATION", self.game_view.view_left + 100, self.game_view.view_bottom + 500,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
         self.level_status_draw()
-        arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 120, self.game_view.view_bottom + 150,
-                                             arcade.load_texture("images/HUD/hudJewel_yellow.png"), scale=1.4)
-        arcade.draw_text("MENU", self.game_view.view_left + 90, self.game_view.view_bottom + 145,
-                         arcade.color.BLACK, font_size=20, align="right")
+        PauseView(self.game_view).draw_menu_gameplay()
         self.game_view.update_score()
 
     def level_status_draw(self):
         if self.game_view.level == 2:
             arcade.draw_text("GAME FINISHED", self.game_view.view_left + 100,
-                             self.game_view.view_bottom + 300,
-                             arcade.color.YELLOW_ROSE, font_size=40, align="right")
-            arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 520, self.game_view.view_bottom + 150,
-                                                 arcade.load_texture("images/HUD/hudHeart_full.png"), scale=2)
+                             self.game_view.view_bottom + 450,
+                             arcade.color.YELLOW_ROSE, font_size=30, align="right")
         else:
             arcade.draw_text("TO NEXT LEVEL PRESS ENTER", self.game_view.view_left + 100,
-                             self.game_view.view_bottom + 300,
+                             self.game_view.view_bottom + 450,
                              arcade.color.YELLOW_ROSE, font_size=30, align="right")
-            arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 520, self.game_view.view_bottom + 150,
-                                                 arcade.load_texture("images/HUD/hudPlayer_green.png"), scale=2)
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         arcade.set_viewport(left=0, right=SCREEN_WIDTH, bottom=0, top=SCREEN_HEIGHT)
-        button_list = [BUTTONS['menu']]
-        GameMenu().eval_button(x, y, button_list)
+        PauseView(self.game_view).eval_menu_gameplay(x, y)
 
     def on_key_press(self, key, _modifiers):
         if self.game_view.level != 2:
