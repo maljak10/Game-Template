@@ -62,7 +62,7 @@ class GameMenu(arcade.View):
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture("png_ground/BG/BG.png"))
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture("game_menu.png"))
+                                            arcade.load_texture("images/game_menu.png"))
         arcade.draw_text("ADVENTURE JUNGLE", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
                          arcade.color.ORANGE_PEEL, font_size=40, anchor_x="center")
         self.draw_control_buttons()
@@ -115,9 +115,9 @@ class LevelSelect(arcade.View):
         """ Draw the menu """
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+                                            arcade.load_texture("png_ground/BG/BG.png"))
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture(f"level_select.png"))
+                                            arcade.load_texture("images/level_select.png"))
         arcade.draw_text("SELECT THE LEVEL", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
@@ -192,9 +192,9 @@ class Author(arcade.View):
     def on_draw(self):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+                                            arcade.load_texture("png_ground/BG/BG.png"))
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture("author.png"))
+                                            arcade.load_texture("images/author.png"))
         arcade.draw_text("ABOUT AUTHOR", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2, arcade.color.ORANGE_PEEL, font_size=50,
                          anchor_x="center")
         arcade.draw_text("Math student \n"
@@ -227,7 +227,7 @@ class ScoreTable(arcade.View):
     def on_draw(self):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            arcade.load_texture(f"png_ground/BG/BG.png"))
+                                            arcade.load_texture("png_ground/BG/BG.png"))
         self.show_table()
         draw_menu_button()
 
@@ -298,7 +298,7 @@ class GameOver(arcade.View):
             bottom_left_y=self.game_view.view_bottom,
             width=SCREEN_WIDTH,
             height=SCREEN_HEIGHT,
-            texture=arcade.load_texture("JWDLx5AZBtI.jpg"),
+            texture=arcade.load_texture("images/JWDLx5AZBtI.jpg"),
             alpha=200)
         arcade.draw_scaled_texture_rectangle(self.game_view.view_left + 400, self.game_view.view_bottom + 150,
                                              arcade.load_texture("images/Tiles/lockRed.png"), scale=1.4)
@@ -339,7 +339,7 @@ class Congrats(arcade.View):
             bottom_left_y=self.game_view.view_bottom,
             width=SCREEN_WIDTH,
             height=SCREEN_HEIGHT,
-            texture=arcade.load_texture("congrats.png"))
+            texture=arcade.load_texture("images/congrats.png"))
         arcade.draw_text("CONGRATULATION", self.game_view.view_left + 100, self.game_view.view_bottom + 500,
                          arcade.color.YELLOW_ROSE, font_size=50, align="center")
         self.level_status_draw()
