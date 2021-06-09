@@ -404,7 +404,7 @@
     <property name="change_y" type="float" value="1"/>
    </properties>
   </object>
-  <object id="26" gid="14" x="2560.5" y="386.5" width="286.667" height="96">
+  <object id="26" gid="14" x="2560.5" y="286.5" width="286.667" height="96">
    <properties>
     <property name="boundary_left" type="float" value="1728"/>
     <property name="boundary_right" type="float" value="2496"/>

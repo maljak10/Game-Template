@@ -52,6 +52,10 @@ class GameMenu(arcade.View):
     def __init__(self):
         super().__init__()
 
+        # sounds
+        self.menu_select = arcade.load_sound("sounds/menu_selection_click.wav")
+
+
     def on_draw(self):
         """ Draw the menu """
         arcade.start_render()
@@ -90,6 +94,7 @@ class GameMenu(arcade.View):
         button_list = [BUTTONS['big_left'], BUTTONS['big_right'],
                        BUTTONS['instruction'], BUTTONS['scores'], BUTTONS['author']]
         self.eval_button(x, y, button_list)
+        arcade.play_sound(self.menu_select)
 
     def eval_button(self, x, y, button_list):
         for i in button_list:
@@ -104,6 +109,7 @@ class GameMenu(arcade.View):
 class LevelSelect(arcade.View):
     def __init__(self):
         super().__init__()
+        self.menu_select = arcade.load_sound("sounds/menu_selection_click.wav")
 
     def on_draw(self):
         """ Draw the menu """
@@ -123,6 +129,7 @@ class LevelSelect(arcade.View):
                                              BUTTONS['escape_level'][0], scale=0.7)
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.play_sound(self.menu_select)
         button_list = [BUTTONS['first_level'], BUTTONS['second_level'], BUTTONS['escape_level']]
         for i in button_list:
             texture = i[0]
@@ -146,6 +153,7 @@ class LevelSelect(arcade.View):
 class Instructions(arcade.View):
     def __init__(self):
         super().__init__()
+        self.menu_select = arcade.load_sound("sounds/menu_selection_click.wav")
 
     def on_draw(self):
         arcade.start_render()
@@ -164,6 +172,7 @@ class Instructions(arcade.View):
         draw_menu_button()
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.play_sound(self.menu_select)
         button_list = [BUTTONS['menu']]
         GameMenu().eval_button(x, y, button_list)
 
@@ -178,6 +187,7 @@ def draw_menu_button():
 class Author(arcade.View):
     def __init__(self):
         super().__init__()
+        self.menu_select = arcade.load_sound("sounds/menu_selection_click.wav")
 
     def on_draw(self):
         arcade.start_render()
@@ -195,6 +205,7 @@ class Author(arcade.View):
         draw_menu_button()
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.play_sound(self.menu_select)
         button_list = [BUTTONS['menu']]
         GameMenu().eval_button(x, y, button_list)
 
@@ -202,6 +213,7 @@ class Author(arcade.View):
 class ScoreTable(arcade.View):
     def __init__(self):
         super().__init__()
+        self.menu_select = arcade.load_sound("sounds/menu_selection_click.wav")
 
     def show_table(self):
         arcade.draw_text("BEST SCORES", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
@@ -220,6 +232,7 @@ class ScoreTable(arcade.View):
         draw_menu_button()
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        arcade.play_sound(self.menu_select)
         button_list = [BUTTONS['menu']]
         GameMenu().eval_button(x, y, button_list)
 
@@ -392,17 +405,10 @@ class MyGame(arcade.View):
         self.jump_sound = arcade.load_sound(":resources:sounds/jump3.wav")
         self.lost_life_sound = arcade.load_sound(":resources:sounds/hit4.wav")
         self.finish_level_sound = arcade.load_sound(":resources:sounds/upgrade1.wav")
-        self.game_over_sound = arcade.load_sound(":resources:sounds/hit4.wav")
-
-        self.music_list = []
-        self.current_song_index = 0
+        self.game_over_sound = arcade.load_sound("sounds/error.wav")
+        self.game_creature = arcade.load_sound("sounds/game_creature.wav")
         self.current_player = None
         self.music = None
-
-    def advance_song(self):
-        self.current_song_index += 1
-        if self.current_song_index >= len(self.music_list):
-            self.current_song_index = 0
 
     def play_song(self):
         # stop currently playing
@@ -410,7 +416,7 @@ class MyGame(arcade.View):
             self.music.stop(self.current_player)
 
         # play next song
-        self.music = arcade.Sound(self.music_list[self.current_song_index], streaming=True)
+        self.music = arcade.Sound("sounds/childish_theme.WAV", streaming=True)
         self.current_player = self.music.play(volume=0.1, loop=True)
         time.sleep(0.03)
 
@@ -421,8 +427,8 @@ class MyGame(arcade.View):
         self.view_bottom = 0
 
         self.player_list = arcade.SpriteList()
-        # if not self.player_sprite:
         self.player_sprite = self.create_player_sprite()
+        arcade.play_sound(self.game_creature)
         self.player_list.append(self.player_sprite)
 
         # add map to game
@@ -444,8 +450,6 @@ class MyGame(arcade.View):
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
         # Setup music
-        self.music_list = ["sounds/childish_theme.WAV", "sounds/sky_loop.WAV"]
-        self.current_song_index = 0
         self.play_song()
 
         # Move the player sprite back to the beginning
@@ -565,8 +569,6 @@ class MyGame(arcade.View):
         """ Render the screen. """
 
         arcade.start_render()
-        # self.back = arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-        #                                                 arcade.load_texture(f"png_ground/BG/BG.png"))
         self.background.draw()
         self.wall_list.draw()
         self.pins.draw()
@@ -595,7 +597,6 @@ class MyGame(arcade.View):
         elif key == arcade.key.P:
             pause = PauseView(self)
             self.window.show_view(pause)
-
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -644,7 +645,9 @@ class MyGame(arcade.View):
         if goals_hit:
             bravo = Congrats(self)
             self.window.show_view(bravo)
-            arcade.play_sound(self.finish_level_sound)
+            if self.music:
+                self.music.stop(self.current_player)
+                arcade.play_sound(self.finish_level_sound)
 
         if arcade.check_for_collision_with_list(self.player_sprite, self.pins):
             self.life_check()
@@ -654,16 +657,20 @@ class MyGame(arcade.View):
         self.player_sprite.center_y = PLAYER_START_Y
         self.view_left = 0
         self.view_bottom = 0
+        self.play_song()
 
     def life_check(self):
         if self.life >= 2:
             self.life -= 1
             self.draw_life_counter()
-            arcade.play_sound(self.game_over_sound)
+            arcade.play_sound(self.lost_life_sound)
             self.return_to_start()
         elif self.life == 1:
             self.window.show_view((GameOver(self)))
-            arcade.play_sound(self.game_over_sound)
+            if self.music:
+                self.music.stop(self.current_player)
+                arcade.play_sound(self.game_over_sound)
+
 
     def update_score(self):
         f = open('scores.txt', 'w')
