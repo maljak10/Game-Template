@@ -1,5 +1,5 @@
 """
-    Adventure Jungle
+    Jungle Adventure
     Simple Platformer Game
 """
 import arcade
@@ -63,7 +63,7 @@ class GameMenu(arcade.View):
                                             arcade.load_texture("png_ground/BG/BG.png"))
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                                             arcade.load_texture("images/game_menu.png"))
-        arcade.draw_text("ADVENTURE JUNGLE", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
+        arcade.draw_text("JUNGLE ADVENTURE", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
                          arcade.color.ORANGE_PEEL, font_size=40, anchor_x="center")
         self.draw_control_buttons()
 
