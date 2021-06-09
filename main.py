@@ -216,12 +216,12 @@ class ScoreTable(arcade.View):
         self.menu_select = arcade.load_sound("sounds/menu_selection_click.wav")
 
     def show_table(self):
-        arcade.draw_text("BEST SCORES", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
+        arcade.draw_text("LATEST SCORE", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.3,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
         t = open('scores.txt', 'r')
         table = t.readlines()
         for i in table:
-            arcade.draw_text(i, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4,
+            arcade.draw_text(i, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 1.5,
                              arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_draw(self):
