@@ -16,8 +16,8 @@ To run this app Arcade requires Python 3.6 or newer.
 
 ### How to run this app?
 1. Clone the project: 
-`git clone  https://github.com/maljak10/Game-Template.git Game-Template`
-`cd Game-Template `
+`git clone  https://github.com/maljak10/Simple-Platformer.git`
+`cd Simple-Platformer `
 2. Install the project's development and runtime requirements:
 `pip install -r requirements.txt`
 3. Run the game: python main.py
